@@ -1,0 +1,5 @@
+{
+  "editor.tabSize": 2,
+  "vetur.validation.template": false,
+  "eslint.validate": ["typescript", "vue"]
+}
