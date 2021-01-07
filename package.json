@@ -13,9 +13,13 @@
     "build": "vuedx-typecheck . && vite build"
   },
   "dependencies": {
+    "apexcharts": "^3.23.1",
+    "axios": "^0.21.1",
     "bootstrap": "^5.0.0-beta1",
     "vue": "^3.0.5",
-    "vue-router": "^4.0.2"
+    "vue-axios": "^3.2.2",
+    "vue-router": "^4.0.2",
+    "vue3-apexcharts": "^1.1.1"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.12.0",
