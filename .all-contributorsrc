@@ -1,0 +1,26 @@
+{
+  "projectName": "FYP-Dashboard",
+  "projectOwner": "DylanGore",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "gitmoji",
+  "contributors": [
+    {
+      "login": "DylanGore",
+      "name": "Dylan Gore",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/2760449?v=4",
+      "profile": "https://dylangore.ie/",
+      "contributions": [
+        "code",
+        "doc",
+        "ideas"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}
