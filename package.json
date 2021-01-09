@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "vite",
     "lint": "eslint src --ext .ts,.vue",
-    "build": "vuedx-typecheck . && vite build"
+    "build": "vite build"
   },
   "dependencies": {
     "apexcharts": "^3.23.1",
