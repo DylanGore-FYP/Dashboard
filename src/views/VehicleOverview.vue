@@ -25,7 +25,22 @@
         </table>
       </div> -->
       <div class="col-md-6 col-sm-12">
-        <div id="chart"></div>
+        <div id="chartSpeed" class="vehicleChart"></div>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <div id="chartRPM" class="vehicleChart"></div>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <div id="chartCoolantTemp" class="vehicleChart"></div>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <div id="chartIntakeTemp" class="vehicleChart"></div>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <div id="chartThrottlePos" class="vehicleChart"></div>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <div id="chartEngineLoad" class="vehicleChart"></div>
       </div>
     </div>
   </div>
@@ -49,11 +64,15 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.getVehicleData();
-    this.$nextTick(() => {});
+    this.getSpeedData();
+    this.getRPMData();
+    this.getCoolantTempData();
+    this.getIntakeTempData();
+    this.getThrottlePosData();
+    this.getEngineLoadData();
   },
   methods: {
-    getVehicleData() {
+    getSpeedData() {
       console.log(this.$route.params.vehicleId);
       this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/speed`).then((response) => {
         this.data = response.data;
@@ -67,7 +86,8 @@ export default defineComponent({
 
         var options = {
           chart: {
-            type: 'line'
+            type: 'line',
+            height: '400'
           },
           series: [
             {
@@ -77,13 +97,13 @@ export default defineComponent({
           ],
           xaxis: {
             type: 'datetime',
-            min: new Date('2021-01-05T14:30:00').getTime(),
-            max: new Date('2021-01-05T14:40:00').getTime()
+            min: new Date('2021-01-18T13:40:00').getTime(),
+            max: new Date('2021-01-18T13:48:00').getTime()
           },
           yaxis: {
             labels: {
               formatter: function (value) {
-                return value + ' km/h';
+                return Math.round((value + Number.EPSILON) * 100) / 100 + ' km/h';
               }
             }
           },
@@ -102,7 +122,272 @@ export default defineComponent({
           }
         };
 
-        var chart = new ApexCharts(document.querySelector('#chart'), options);
+        var chart = new ApexCharts(document.querySelector('#chartSpeed'), options);
+
+        chart.render();
+      });
+    },
+    getRPMData() {
+      console.log(this.$route.params.vehicleId);
+      this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/rpm`).then((response) => {
+        var result = [];
+        response.data.forEach((entry) => {
+          result.push({ x: new Date(entry.time).getTime(), y: entry.value });
+        });
+
+        console.log(result);
+
+        var options = {
+          chart: {
+            type: 'line',
+            height: '400'
+          },
+          series: [
+            {
+              name: 'RPM',
+              data: result
+            }
+          ],
+          xaxis: {
+            type: 'datetime',
+            min: new Date('2021-01-18T13:40:00').getTime(),
+            max: new Date('2021-01-18T13:48:00').getTime()
+          },
+          yaxis: {
+            labels: {
+              formatter: function (value) {
+                return Math.round((value + Number.EPSILON) * 100) / 100 + ' rpm';
+              }
+            }
+          },
+          tooltip: {
+            x: {
+              formatter(timestamp) {
+                return format(new Date(timestamp), 'dd MMM y pp');
+              }
+            }
+          },
+          title: {
+            text: 'Engine RPM'
+          },
+          markers: {
+            size: 1
+          }
+        };
+
+        var chart = new ApexCharts(document.querySelector('#chartRPM'), options);
+
+        chart.render();
+      });
+    },
+    getCoolantTempData() {
+      console.log(this.$route.params.vehicleId);
+      this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/coolant_temp`).then((response) => {
+        var result = [];
+        response.data.forEach((entry) => {
+          result.push({ x: new Date(entry.time).getTime(), y: entry.value });
+        });
+
+        console.log(result);
+
+        var options = {
+          chart: {
+            type: 'line',
+            height: '400'
+          },
+          series: [
+            {
+              name: 'Coolant Temperature',
+              data: result
+            }
+          ],
+          xaxis: {
+            type: 'datetime',
+            min: new Date('2021-01-18T13:40:00').getTime(),
+            max: new Date('2021-01-18T13:48:00').getTime()
+          },
+          yaxis: {
+            labels: {
+              formatter: function (value) {
+                return Math.round((value + Number.EPSILON) * 100) / 100 + ' °C';
+              }
+            }
+          },
+          tooltip: {
+            x: {
+              formatter(timestamp) {
+                return format(new Date(timestamp), 'dd MMM y pp');
+              }
+            }
+          },
+          title: {
+            text: 'Coolant Temperature'
+          },
+          markers: {
+            size: 1
+          }
+        };
+
+        var chart = new ApexCharts(document.querySelector('#chartCoolantTemp'), options);
+
+        chart.render();
+      });
+    },
+    getIntakeTempData() {
+      console.log(this.$route.params.vehicleId);
+      this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/intake_temp`).then((response) => {
+        var result = [];
+        response.data.forEach((entry) => {
+          result.push({ x: new Date(entry.time).getTime(), y: entry.value });
+        });
+
+        console.log(result);
+
+        var options = {
+          chart: {
+            type: 'line',
+            height: '400'
+          },
+          series: [
+            {
+              name: 'Intake Temperature',
+              data: result
+            }
+          ],
+          xaxis: {
+            type: 'datetime',
+            min: new Date('2021-01-18T13:40:00').getTime(),
+            max: new Date('2021-01-18T13:48:00').getTime()
+          },
+          yaxis: {
+            labels: {
+              formatter: function (value) {
+                return Math.round((value + Number.EPSILON) * 100) / 100 + ' °C';
+              }
+            }
+          },
+          tooltip: {
+            x: {
+              formatter(timestamp) {
+                return format(new Date(timestamp), 'dd MMM y pp');
+              }
+            }
+          },
+          title: {
+            text: 'Intake Temperature'
+          },
+          markers: {
+            size: 1
+          }
+        };
+
+        var chart = new ApexCharts(document.querySelector('#chartIntakeTemp'), options);
+
+        chart.render();
+      });
+    },
+    getThrottlePosData() {
+      console.log(this.$route.params.vehicleId);
+      this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/throttle_pos`).then((response) => {
+        var result = [];
+        response.data.forEach((entry) => {
+          result.push({ x: new Date(entry.time).getTime(), y: entry.value });
+        });
+
+        console.log(result);
+
+        var options = {
+          chart: {
+            type: 'line',
+            height: '400'
+          },
+          series: [
+            {
+              name: 'Throttle Position',
+              data: result
+            }
+          ],
+          xaxis: {
+            type: 'datetime',
+            min: new Date('2021-01-18T13:40:00').getTime(),
+            max: new Date('2021-01-18T13:48:00').getTime()
+          },
+          yaxis: {
+            labels: {
+              formatter: function (value) {
+                return Math.round((value + Number.EPSILON) * 100) / 100 + '%';
+              }
+            }
+          },
+          tooltip: {
+            x: {
+              formatter(timestamp) {
+                return format(new Date(timestamp), 'dd MMM y pp');
+              }
+            }
+          },
+          title: {
+            text: 'Throttle Position'
+          },
+          markers: {
+            size: 1
+          }
+        };
+
+        var chart = new ApexCharts(document.querySelector('#chartThrottlePos'), options);
+
+        chart.render();
+      });
+    },
+    getEngineLoadData() {
+      console.log(this.$route.params.vehicleId);
+      this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/engine_load`).then((response) => {
+        var result = [];
+        response.data.forEach((entry) => {
+          result.push({ x: new Date(entry.time).getTime(), y: entry.value });
+        });
+
+        console.log(result);
+
+        var options = {
+          chart: {
+            type: 'line',
+            height: '400'
+          },
+          series: [
+            {
+              name: 'Engine Load',
+              data: result
+            }
+          ],
+          xaxis: {
+            type: 'datetime',
+            min: new Date('2021-01-18T13:40:00').getTime(),
+            max: new Date('2021-01-18T13:48:00').getTime()
+          },
+          yaxis: {
+            labels: {
+              formatter: function (value) {
+                return Math.round((value + Number.EPSILON) * 100) / 100 + '%';
+              }
+            }
+          },
+          tooltip: {
+            x: {
+              formatter(timestamp) {
+                return format(new Date(timestamp), 'dd MMM y pp');
+              }
+            }
+          },
+          title: {
+            text: 'Engine Load'
+          },
+          markers: {
+            size: 1
+          }
+        };
+
+        var chart = new ApexCharts(document.querySelector('#chartEngineLoad'), options);
 
         chart.render();
       });
@@ -113,3 +398,9 @@ export default defineComponent({
   }
 });
 </script>
+
+<style scoped>
+.vehicleChart {
+  height: 120px;
+}
+</style>
