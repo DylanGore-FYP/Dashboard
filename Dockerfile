@@ -22,6 +22,7 @@ FROM nginx:stable-alpine as production
 
 # Copy the build output to the default Nginx directory
 COPY --from=build-stage /build/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80
 EXPOSE 80
