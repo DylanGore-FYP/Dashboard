@@ -19,7 +19,6 @@ jobs:
         id: prepare
         run: |
           DOCKER_IMAGE=ghcr.io/dylangore-fyp/dashboard
-          DOCKER_PLATFORMS=inux/amd64,linux/arm64,linux/386,linux/arm/v7,linux/arm/v6
           VERSION=edge
 
           if [[ $GITHUB_REF == refs/tags/* ]]; then
@@ -33,7 +32,6 @@ jobs:
           echo ::set-output name=buildx_args::--platform ${DOCKER_PLATFORMS}
           echo ::set-output name=tags::${TAGS}
           echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-          echo ::set-output name=sha_short::$(git rev-parse --short HEAD)
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -44,19 +42,29 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Docker Buildx (build)
-        run: |
-          docker buildx build --output "type=image,push=false" ${{ steps.prepare.outputs.buildx_args }}
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+      - name: Build and push
+        uses: docker/build-push-action@v2
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Docker Buildx (push)
-        run: |
-          docker buildx build --output "type=image,push=true" ${{ steps.prepare.outputs.buildx_args }}
-      # - name: Inspect image
+          context: .
+          platforms: linux/amd64,linux/arm64,linux/386,linux/arm/v7,linux/arm/v6
+          tags: ${{ steps.prepare.outputs.tags }}
+          labels: |
+            org.opencontainers.image.source=${{ github.event.repository.html_url }}
+            org.opencontainers.image.created=${{ steps.prepare.outputs.created }}
+            org.opencontainers.image.revision=${{ github.sha }}
+      # - name: Docker Buildx (build)
       #   run: |
-      #     docker buildx imagetools inspect ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }}
+      #     docker buildx build --output "type=image,push=false" ${{ steps.prepare.outputs.buildx_args }} .
+      # - name: Login to GitHub Container Registry
+      #   uses: docker/login-action@v1
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Docker Buildx (push)
+      #   run: |
+      #     docker buildx build --output "type=image,push=true" ${{ steps.prepare.outputs.buildx_args }} .
+      # # - name: Inspect image
+      # #   run: |
+      # #     docker buildx imagetools inspect ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }}
