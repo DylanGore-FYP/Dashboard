@@ -31,7 +31,7 @@
         <!-- Show if user is already logged in -->
         <div v-else class="card mt-2">
           <div class="card-body">
-            <div class="card-text">You are already logged in as {{ getUser.email }}</div>
+            <div class="card-text">You are logged in as {{ getUser.displayName }} ({{ getUser.email }})</div>
             <div class="btn-group" role="group">
               <router-link class="btn btn-primary" to="/dashboard" role="button" tag="button">Dashboard</router-link>
               <button class="btn btn-secondary" role="button" @click="logOutUser()">Log Out</button>

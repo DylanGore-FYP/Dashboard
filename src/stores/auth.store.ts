@@ -25,8 +25,12 @@ export default createStore({
       // prettier-ignore
       firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password).then(res => {
         commit('setUser', res.user);
-        commit('setAlertType', 'success');
-        commit('setAlertMessage', 'New user created successfully!');
+        if (res.user){
+          res.user.updateProfile({
+            displayName: payload.name
+          })
+        }
+        commit('setAlert', {type: 'success', message: 'New user created successfully!'});
         console.log(`User registration for ${payload.email} successful!`);
       }).catch(err => {
         commit('setAlert', {type: 'error', message: err.message});

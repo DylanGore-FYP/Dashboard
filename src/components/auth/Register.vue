@@ -19,6 +19,10 @@
               </div>
               <!-- Main Form -->
               <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input id="name" v-model="name" type="text" autocomplete="name" class="form-control" required />
+              </div>
+              <div class="mb-3">
                 <label for="email" class="form-label">E-mail address</label>
                 <input id="email" v-model="email" type="email" autocomplete="username" class="form-control" required />
               </div>
@@ -39,7 +43,7 @@
         <!-- Show if user is already logged in -->
         <div v-else class="card mt-2">
           <div class="card-body">
-            <div class="card-text">You are already logged in as {{ getUser.email }}</div>
+            <div class="card-text">You are logged in as {{ getUser.displayName }} ({{ getUser.email }})</div>
             <div class="btn-group" role="group">
               <router-link class="btn btn-primary" to="/dashboard" role="button" tag="button">Dashboard</router-link>
               <button class="btn btn-secondary" role="button" @click="logOutUser()">Log Out</button>
@@ -58,6 +62,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 export default defineComponent({
   data() {
     return {
+      name: '' as string,
       email: '' as string,
       password: '' as string,
       passwordConfirm: '' as string
@@ -77,10 +82,14 @@ export default defineComponent({
     ...mapMutations(['clearAlert', 'setAlert']),
     createAccount() {
       if (this.password === this.passwordConfirm) {
-        // Register the new user
-        this.registerUserAction({ email: this.email, password: this.password });
-        // Clear the form
-        this.email = this.password = this.passwordConfirm = '';
+        if (this.name !== '') {
+          // Register the new user
+          this.registerUserAction({ name: this.name, email: this.email, password: this.password });
+          // Clear the form
+          this.name = this.email = this.password = this.passwordConfirm = '';
+        } else {
+          this.setAlert({ type: 'error', message: 'Please enter your name' });
+        }
       } else {
         this.setAlert({ type: 'error', message: 'Your passwords do not match!' });
       }
