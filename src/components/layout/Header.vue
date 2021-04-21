@@ -7,11 +7,17 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div id="mainNavbar" class="collapse navbar-collapse">
+        <!-- Left Links -->
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <router-link class="nav-link active" to="/dashboard">
-              Dashboard
-            </router-link>
+            <router-link class="nav-link" to="/dashboard">Dashboard</router-link>
+          </li>
+        </ul>
+        <!-- Right Links -->
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item">
+            <router-link v-if="!isUserAuthenticated" class="nav-link" to="/login">Login</router-link>
+            <a v-else class="nav-link" href="" @click="logOutUser()">Log Out</a>
           </li>
         </ul>
       </div>
@@ -20,12 +26,16 @@
 </template>
 
 <script lang="ts">
-export default {
-  props: {
-    todo: {
-      required: true,
-      type: Object
-    }
+import { defineComponent } from 'vue';
+import { mapActions, mapGetters } from 'vuex';
+
+export default defineComponent({
+  name: 'Header',
+  computed: {
+    ...mapGetters(['getUser', 'isUserAuthenticated'])
+  },
+  methods: {
+    ...mapActions(['logOutUser'])
   }
-};
+});
 </script>

@@ -58,11 +58,6 @@ export default defineComponent({
       data: []
     };
   },
-  computed: {
-    chartSpeed() {
-      return result;
-    }
-  },
   mounted() {
     this.getSpeedData();
     this.getRPMData();
@@ -77,7 +72,7 @@ export default defineComponent({
       this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/speed`).then((response) => {
         this.data = response.data;
 
-        var result = [];
+        var result: any = [];
         this.data.forEach((entry) => {
           result.push({ x: new Date(entry.time).getTime(), y: entry.value });
         });
@@ -130,7 +125,7 @@ export default defineComponent({
     getRPMData() {
       console.log(this.$route.params.vehicleId);
       this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/rpm`).then((response) => {
-        var result = [];
+        var result: any = [];
         response.data.forEach((entry) => {
           result.push({ x: new Date(entry.time).getTime(), y: entry.value });
         });
