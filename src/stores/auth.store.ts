@@ -1,8 +1,9 @@
 import { createStore } from 'vuex';
 import firebase from 'firebase/app';
 
+// Define the default state for each item in the store
 const initialState = () => {
-  return { user: null, error: null };
+  return { user: null, alert: { type: 'error', message: '' } };
 };
 
 export default createStore({
@@ -11,8 +12,11 @@ export default createStore({
     setUser(state, payload) {
       state.user = payload;
     },
-    setError(state, payload) {
-      state.error = payload;
+    setAlert(state, payload) {
+      state.alert = payload;
+    },
+    clearAlert(state, _payload) {
+      state.alert = initialState().alert;
     }
   },
   actions: {
@@ -21,9 +25,11 @@ export default createStore({
       // prettier-ignore
       firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password).then(res => {
         commit('setUser', res.user);
+        commit('setAlertType', 'success');
+        commit('setAlertMessage', 'New user created successfully!');
         console.log(`User registration for ${payload.email} successful!`);
       }).catch(err => {
-        commit('setError', err.message);
+        commit('setAlert', {type: 'error', message: err.message});
         console.error(`Error while creating user account for ${payload.email}: ${err.message}`);
       })
     },
@@ -31,7 +37,9 @@ export default createStore({
     authenticateUserAction({ commit }, payload) {
       // prettier-ignore
       return firebase.auth().signInWithEmailAndPassword(payload.email, payload.password).catch(err => {
-        commit('setError', err.message);
+        // commit('setAlertType', 'error');
+        // commit('setAlertMessage', err.message);
+        commit('setAlert', {type: 'error', message: err.message});
         console.error(`Error while authenticating user ${payload.email} - ${err.message}`);
       })
     },
@@ -39,7 +47,7 @@ export default createStore({
     logOutUser({ commit }) {
       // prettier-ignore
       firebase.auth().signOut().catch(err => {
-        commit('setError', err.message);
+        commit('setAlert', {type: 'error', message: err.message});
         console.error(`Eror while logging user out - ${err.message}`)
       })
     },
@@ -48,10 +56,10 @@ export default createStore({
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           commit('setUser', user);
-          console.log('Updating user state');
+          console.log('Setting user');
         } else {
           commit('setUser', null);
-          console.log('Setting user to null');
+          console.log('Clearing User');
         }
       });
     }
@@ -66,8 +74,8 @@ export default createStore({
       return !!state.user;
     },
     // Get the authentication error object
-    getError(state) {
-      return state.error;
+    getAlert(state) {
+      return state.alert;
     }
   }
 });

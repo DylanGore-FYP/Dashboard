@@ -32,9 +32,11 @@ import { mapActions, mapGetters } from 'vuex';
 export default defineComponent({
   name: 'Header',
   computed: {
+    // Get the getter functions from the Vuex store
     ...mapGetters(['getUser', 'isUserAuthenticated'])
   },
   methods: {
+    // Get the action functions from the Vuex store
     ...mapActions(['logOutUser'])
   }
 });

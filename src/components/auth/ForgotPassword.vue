@@ -7,14 +7,14 @@
           <div class="card-body">
             <form>
               <!-- Error Alert -->
-              <div v-if="alert.message && alert.type === 'error'" class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ alert.message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              <div v-if="getAlert.message && getAlert.type === 'error'" class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ getAlert.message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="clearAlert()"></button>
               </div>
               <!-- Success Alert -->
-              <div v-if="alert.message && alert.type === 'success'" class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ alert.message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              <div v-if="getAlert.message && getAlert.type === 'success'" class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ getAlert.message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="clearAlert()"></button>
               </div>
               <!-- Main Form -->
               <div class="mb-3">
@@ -37,26 +37,33 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { mapMutations, mapGetters } from 'vuex';
 import firebase from 'firebase/app';
 
 export default defineComponent({
   data() {
     return {
-      email: '' as string,
-      alert: {
-        type: 'error' as string,
-        message: '' as string
-      }
+      email: '' as string
     };
   },
+  computed: {
+    // Get the getter functions from the Vuex store
+    ...mapGetters(['getAlert'])
+  },
+  mounted() {
+    // Clear any previous alerts when the component loads
+    this.clearAlert();
+  },
   methods: {
+    // Get the mutation functions from the Vuex store
+    ...mapMutations(['setAlert', 'clearAlert']),
     // Validate the e-mail address, if it's valid send the reset request, if not display an error
     submitForm() {
       const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (this.email.match(emailRegex)) {
         this.forgotPassword();
       } else {
-        this.alert = { type: 'error', message: 'Please enter  a valid e-mail address!' };
+        this.setAlert({ type: 'error', message: 'Please enter  a valid e-mail address!' });
       }
     },
 
@@ -65,9 +72,11 @@ export default defineComponent({
       // prettier-ignore
       firebase.auth().sendPasswordResetEmail(this.email).then(() => {
         console.log(`Sending password reset request to ${this.email}`);
-        this.alert = { type: 'success', message: 'A password reset e-mail has been sent. Please check your inbox.'}
+        this.setAlert({ type: 'success', message: 'A password reset e-mail has been sent. Please check your inbox.'});
+        // Clear the form
+        this.email = ''
       }).catch((err) => {
-        this.alert = { type: 'error', message: err.message };
+        this.setAlert({ type: 'error', message: err.message });
         console.error(`Error while sending a password reset email to ${this.email} - ${err.message}`)
       })
     }
