@@ -1,5 +1,6 @@
 import { createStore } from 'vuex';
 import firebase from 'firebase/app';
+import gravatar from 'gravatar';
 
 // Define the default state for each item in the store
 const initialState = () => {
@@ -26,8 +27,11 @@ export default createStore({
       firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password).then(res => {
         commit('setUser', res.user);
         if (res.user){
+          const avatarUrl = 
           res.user.updateProfile({
-            displayName: payload.name
+            displayName: payload.name,
+            // Get user's avatar using their email address, if it doesn't exist with Gravatar, use default
+            photoURL: gravatar.url(payload.email, { size: '64', default: 'mp' }, true)
           })
         }
         commit('setAlert', {type: 'success', message: 'New user created successfully!'});

@@ -13,11 +13,16 @@
             <router-link class="nav-link" to="/dashboard">Dashboard</router-link>
           </li>
         </ul>
-        <!-- Right Links -->
-        <ul class="navbar-nav mb-2 mb-lg-0">
+        <!-- Right Links (Unauthenticated) -->
+        <ul v-if="!isUserAuthenticated" class="navbar-nav mb-2 mb-lg-0">
           <li class="nav-item">
-            <router-link v-if="!isUserAuthenticated" class="nav-link" to="/login">Login</router-link>
-            <a v-else class="nav-link" href="" @click="logOutUser()">Log Out</a>
+            <router-link class="nav-link" to="/login">Login</router-link>
+          </li>
+        </ul>
+        <!-- Right Links (Authenticated) -->
+        <ul v-else class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="" @click="logOutUser()">Log Out</a>
           </li>
         </ul>
       </div>

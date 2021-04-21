@@ -19,12 +19,14 @@
     "axios": "^0.21.1",
     "bootstrap": "^5.0.0-beta1",
     "date-fns": "^2.21.1",
+    "gravatar": "^1.8.1",
     "vue": "^3.0.5",
     "vue-axios": "^3.2.4",
     "vue-router": "^4.0.2",
     "vuex": "^4.0.0"
   },
   "devDependencies": {
+    "@types/gravatar": "^1.8.1",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
     "@vitejs/plugin-vue": "^1.2.1",
