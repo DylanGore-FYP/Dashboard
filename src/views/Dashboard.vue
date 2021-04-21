@@ -5,11 +5,12 @@
     </div>
     <div class="col-4">
       <h2>Vehicles</h2>
-      <ul class="list-group">
+      <ul v-if="vehicles.length > 0" class="list-group">
         <router-link v-for="vehicle in vehicles" :key="vehicle" class="list-group-item list-group-item-action" :to="{ name: 'vehicleOverview', params: { vehicleId: vehicle } }">
           {{ vehicle }}
         </router-link>
       </ul>
+      <p v-else class="lead">No vehicles found.</p>
     </div>
   </div>
 </template>
