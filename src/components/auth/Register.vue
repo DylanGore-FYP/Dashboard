@@ -35,7 +35,7 @@
                 <input id="passwordConfirm" v-model="passwordConfirm" type="password" autocomplete="new-password" class="form-control" required />
               </div>
               <div class="mb-3">
-                <label for="passwordStrength" class="form-label">Password Strength</label>
+                <label for="passwordStrength" class="form-label">Password Strength ({{ passwordStrength.value }})</label>
                 <div id="passwordStrength" class="progress">
                   <div :class="progressClasses" role="progressbar" :aria-valuenow="passwordStrength.id" :style="passwordStrengthPB" aria-valuemin="0" aria-valuemax="4"></div>
                 </div>
@@ -78,7 +78,7 @@ export default defineComponent({
         id: 0 as number,
         contains: [],
         length: 0 as number,
-        value: '' as string
+        value: 'Too weak' as string
       },
       passwordStrengthPB: 'width: 25%;' as string,
       progressClasses: ['progress-bar', 'bg-danger']
@@ -113,7 +113,6 @@ export default defineComponent({
           this.progressClasses[1] = 'bg-success';
           break;
       }
-      console.log(this.passwordStrength);
     },
     createAccount() {
       if (this.password === this.passwordConfirm) {
