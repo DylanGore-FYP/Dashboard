@@ -17,9 +17,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="clearAlert()"></button>
               </div>
               <!-- Main Form -->
-              <div class="mb-3">
+              <div class="form-floating mb-3">
+                <input id="email" v-model="email" type="email" class="form-control" placeholder="example@example.com" />
                 <label for="email" class="form-label">E-mail address</label>
-                <input id="email" v-model="email" type="email" class="form-control" />
                 <div class="form-text">
                   Please enter your e-mail address above. If it matches an existing account you will receive an e-mail with instuctions to reset your password.
                 </div>

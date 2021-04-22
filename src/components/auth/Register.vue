@@ -18,21 +18,21 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
               <!-- Main Form -->
-              <div class="mb-3">
+              <div class="form-floating mb-3">
+                <input id="name" v-model="name" type="text" autocomplete="name" class="form-control" placeholder="Name" required />
                 <label for="name" class="form-label">Name</label>
-                <input id="name" v-model="name" type="text" autocomplete="name" class="form-control" required />
               </div>
-              <div class="mb-3">
+              <div class="form-floating mb-3">
+                <input id="email" v-model="email" type="email" autocomplete="username" class="form-control" placeholder="example@example.com" required />
                 <label for="email" class="form-label">E-mail address</label>
-                <input id="email" v-model="email" type="email" autocomplete="username" class="form-control" required />
               </div>
-              <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input id="password" v-model="password" type="password" autocomplete="new-password" class="form-control" required @input="checkPassword()" />
+              <div class="form-floating mb-3">
+                <input id="password" v-model="password" type="password" autocomplete="new-password" class="form-control" placeholder="Password" required @input="checkPassword()" />
+                <label for="password">Password</label>
               </div>
-              <div class="mb-3">
-                <label for="passwordConfirm" class="form-label">Confirm Password</label>
-                <input id="passwordConfirm" v-model="passwordConfirm" type="password" autocomplete="new-password" class="form-control" required />
+              <div class="form-floating mb-3">
+                <input id="passwordConfirm" v-model="passwordConfirm" type="password" autocomplete="new-password" class="form-control" placeholder="Password" required />
+                <label for="passwordConfirm">Confirm Password</label>
               </div>
               <div class="mb-3">
                 <label for="passwordStrength" class="form-label">Password Strength ({{ passwordStrength.value }})</label>

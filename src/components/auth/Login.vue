@@ -13,13 +13,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="clearAlert()"></button>
               </div>
               <!-- Main Form -->
-              <div class="mb-3">
+              <div class="form-floating mb-3">
+                <input id="email" v-model="email" type="email" autocomplete="username" class="form-control" placeholder="User" required />
                 <label for="email" class="form-label">E-mail address</label>
-                <input id="email" v-model="email" type="email" autocomplete="username" class="form-control" required />
               </div>
-              <div class="mb-3">
+              <div class="form-floating mb-3">
+                <input id="password" v-model="password" type="password" autocomplete="current-password" class="form-control" placeholder="Password" required />
                 <label for="password" class="form-label">Password</label>
-                <input id="password" v-model="password" type="password" autocomplete="current-password" class="form-control" required />
                 <router-link to="/forgot-password">Forgot password</router-link>
               </div>
               <button type="submit" class="btn btn-primary" @click.prevent="login">Login</button>
