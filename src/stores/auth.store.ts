@@ -4,7 +4,7 @@ import gravatar from 'gravatar';
 
 // Define the default state for each item in the store
 const initialState = () => {
-  return { user: null, alert: { type: 'error', message: '' } };
+  return { user: null, token: null, alert: { type: 'error', message: '' } };
 };
 
 export default createStore({
@@ -12,6 +12,9 @@ export default createStore({
   mutations: {
     setUser(state, payload) {
       state.user = payload;
+    },
+    setToken(state, payload) {
+      state.token = payload;
     },
     setAlert(state, payload) {
       state.alert = payload;
@@ -64,9 +67,11 @@ export default createStore({
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           commit('setUser', user);
+          commit('setToken', firebase.auth().currentUser?.getIdToken());
           console.log('Setting user');
         } else {
           commit('setUser', null);
+          commit('setToken', null);
           console.log('Clearing User');
         }
       });
@@ -76,6 +81,10 @@ export default createStore({
     // Get the user object
     getUser(state) {
       return state.user;
+    },
+    // Get the user's authentication token
+    getToken(state) {
+      return state.token.i;
     },
     // Check if the user object exists, it will only exist if the user is authenticated.
     isUserAuthenticated(state) {

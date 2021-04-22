@@ -50,6 +50,7 @@
 import { defineComponent } from 'vue';
 import ApexCharts from 'apexcharts';
 import { format } from 'date-fns';
+import { mapGetters } from 'vuex';
 
 export default defineComponent({
   name: 'VehicleOverview',
@@ -57,6 +58,10 @@ export default defineComponent({
     return {
       data: []
     };
+  },
+  computed: {
+    // Get the getter functions from the Vuex store
+    ...mapGetters(['getToken'])
   },
   mounted() {
     this.getSpeedData();
@@ -69,7 +74,7 @@ export default defineComponent({
   methods: {
     getSpeedData() {
       console.log(this.$route.params.vehicleId);
-      this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/speed`).then((response) => {
+      this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/speed`, { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
         this.data = response.data;
 
         var result: any = [];
@@ -124,7 +129,7 @@ export default defineComponent({
     },
     getRPMData() {
       console.log(this.$route.params.vehicleId);
-      this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/rpm`).then((response) => {
+      this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/rpm`, { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
         var result: any = [];
         response.data.forEach((entry) => {
           result.push({ x: new Date(entry.time).getTime(), y: entry.value });
@@ -177,7 +182,7 @@ export default defineComponent({
     },
     getCoolantTempData() {
       console.log(this.$route.params.vehicleId);
-      this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/coolant_temp`).then((response) => {
+      this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/coolant_temp`, { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
         var result = [];
         response.data.forEach((entry) => {
           result.push({ x: new Date(entry.time).getTime(), y: entry.value });
@@ -230,7 +235,7 @@ export default defineComponent({
     },
     getIntakeTempData() {
       console.log(this.$route.params.vehicleId);
-      this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/intake_temp`).then((response) => {
+      this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/intake_temp`, { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
         var result = [];
         response.data.forEach((entry) => {
           result.push({ x: new Date(entry.time).getTime(), y: entry.value });
@@ -283,7 +288,7 @@ export default defineComponent({
     },
     getThrottlePosData() {
       console.log(this.$route.params.vehicleId);
-      this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/throttle_pos`).then((response) => {
+      this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/throttle_pos`, { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
         var result = [];
         response.data.forEach((entry) => {
           result.push({ x: new Date(entry.time).getTime(), y: entry.value });
@@ -336,7 +341,7 @@ export default defineComponent({
     },
     getEngineLoadData() {
       console.log(this.$route.params.vehicleId);
-      this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/engine_load`).then((response) => {
+      this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/engine_load`, { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
         var result = [];
         response.data.forEach((entry) => {
           result.push({ x: new Date(entry.time).getTime(), y: entry.value });
