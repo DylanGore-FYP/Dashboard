@@ -32,10 +32,11 @@ export default defineComponent({
     ...mapGetters(['getToken'])
   },
   mounted() {
+    // Get vehicles on load
     this.getVehicles();
-    this.testAPI();
   },
   methods: {
+    // Query the API for the list of vehicles
     getVehicles() {
       this.axios.get('http://localhost:5000/vehicles/all', { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
         this.vehicles = response.data as Array<string>;

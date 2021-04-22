@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 
+// @ts-ignore
 import App from './App.vue';
 import authStore from './stores/auth.store';
 import router from './routes/main.routes';

@@ -37,7 +37,7 @@
               <div class="mb-3">
                 <label for="passwordStrength" class="form-label">Password Strength ({{ passwordStrength.value }})</label>
                 <div id="passwordStrength" class="progress">
-                  <div :class="progressClasses" role="progressbar" :aria-valuenow="passwordStrength.id" :style="passwordStrengthPB" aria-valuemin="0" aria-valuemax="4"></div>
+                  <div :class="progressClasses" role="progressbar" :aria-valuenow="passwordStrength.id" :style="passwordStrengthPB" :aria-valuemin="0" :aria-valuemax="4"></div>
                 </div>
               </div>
               <button type="submit" class="btn btn-primary" @click.prevent="createAccount()">Create Account</button>
@@ -96,9 +96,13 @@ export default defineComponent({
     // Get the action and mutation functions from the Vuex store
     ...mapActions(['registerUserAction', 'logOutUser']),
     ...mapMutations(['clearAlert', 'setAlert']),
+    // Runs whenever the password value changes
     checkPassword() {
+      // Calculate the password strength
       this.passwordStrength = passwordStrength(this.password);
+      // Set the progress bar width based on the password strength
       this.passwordStrengthPB = `width: ${this.passwordStrength.id * 25 + 25}%;`;
+      // Set the progress bar colour based on the password strength
       switch (this.passwordStrength.id) {
         case 0:
           this.progressClasses[1] = 'bg-danger';
@@ -114,16 +118,21 @@ export default defineComponent({
           break;
       }
     },
+    // Validate the registration form and create a new user
     createAccount() {
+      // If both passwords match
       if (this.password === this.passwordConfirm) {
+        // If the password strength is not considered 'Too weak'
         if (this.passwordStrength.id < 1) {
           this.setAlert({ type: 'error', message: 'Your password is not strong enough!' });
         } else {
+          // If the name is not set
           if (this.name !== '') {
             // Register the new user
             this.registerUserAction({ name: this.name, email: this.email, password: this.password });
             // Clear the form
             this.name = this.email = this.password = this.passwordConfirm = '';
+            // Calculate the password strength using the empty password to reset the progress bar
             this.checkPassword();
           } else {
             this.setAlert({ type: 'error', message: 'Please enter your name' });

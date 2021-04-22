@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "vite",
     "lint": "eslint src --ext .ts,.vue",
-    "build": "vite build",
+    "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview"
   },
   "dependencies": {

@@ -29,8 +29,7 @@ export default createStore({
       // prettier-ignore
       firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password).then(res => {
         commit('setUser', res.user);
-        if (res.user){
-          const avatarUrl = 
+        if (res.user){ 
           res.user.updateProfile({
             displayName: payload.name,
             // Get user's avatar using their email address, if it doesn't exist with Gravatar, use default
@@ -48,8 +47,6 @@ export default createStore({
     authenticateUserAction({ commit }, payload) {
       // prettier-ignore
       return firebase.auth().signInWithEmailAndPassword(payload.email, payload.password).catch(err => {
-        // commit('setAlertType', 'error');
-        // commit('setAlertMessage', err.message);
         commit('setAlert', {type: 'error', message: err.message});
         console.error(`Error while authenticating user ${payload.email} - ${err.message}`);
       })
@@ -68,11 +65,9 @@ export default createStore({
         if (user) {
           commit('setUser', user);
           commit('setToken', firebase.auth().currentUser?.getIdToken());
-          console.log('Setting user');
         } else {
           commit('setUser', null);
           commit('setToken', null);
-          console.log('Clearing User');
         }
       });
     }
@@ -84,7 +79,8 @@ export default createStore({
     },
     // Get the user's authentication token
     getToken(state) {
-      return state.token.i;
+      // @ts-ignore
+      return state.token?.i;
     },
     // Check if the user object exists, it will only exist if the user is authenticated.
     isUserAuthenticated(state) {

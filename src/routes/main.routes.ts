@@ -1,11 +1,18 @@
 import { createWebHistory, createRouter } from 'vue-router';
 import firebase from 'firebase/app';
 
+// General Components
+// @ts-ignore
 import Dashboard from '../views/Dashboard.vue';
+// @ts-ignore
 import VehicleOverview from '../views/VehicleOverview.vue';
 
+// Auth-Related Components
+// @ts-ignore
 import Login from '../components/auth/Login.vue';
+// @ts-ignore
 import Register from '../components/auth/Register.vue';
+// @ts-ignore
 import ForgotPassword from '../components/auth/ForgotPassword.vue';
 
 const history = createWebHistory();
@@ -20,7 +27,7 @@ const routes = [
 
 const router = createRouter({ history, routes });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   // If the route requires authentication
   if (to.matched.some((rec) => rec.meta.requiresAuth)) {
     // Check the user's authentication state
