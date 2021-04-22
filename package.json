@@ -6,38 +6,43 @@
     "email": "hello@dylangore.ie",
     "url": "https://github.com/DylanGore"
   },
-  "repository": "github:DylanGore/FYP-Dashboard",
+  "repository": "github:DylanGore-FYP/FYP-Dashboard",
   "scripts": {
     "dev": "vite",
     "lint": "eslint src --ext .ts,.vue",
-    "build": "vite build"
+    "build": "vite build",
+    "serve": "vite preview"
   },
   "dependencies": {
     "@popperjs/core": "^2.9.2",
-    "apexcharts": "^3.26.0",
+    "apexcharts": "^3.26.1",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.0-beta1",
-    "date-fns": "^2.20.1",
+    "check-password-strength": "^2.0.2",
+    "date-fns": "^2.21.1",
+    "gravatar": "^1.8.1",
     "vue": "^3.0.5",
     "vue-axios": "^3.2.4",
-    "vue-router": "^4.0.2"
+    "vue-router": "^4.0.2",
+    "vuex": "^4.0.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.21.0",
-    "@typescript-eslint/parser": "^4.21.0",
+    "@types/gravatar": "^1.8.1",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
     "@vitejs/plugin-vue": "^1.2.1",
     "@vue/compiler-sfc": "^3.0.11",
     "@vue/eslint-config-typescript": "^7.0.0",
-    "@vuedx/typecheck": "^0.6.3",
-    "@vuedx/typescript-plugin-vue": "^0.6.3",
     "all-contributors-cli": "^6.20.0",
     "eslint": "^7.24.0",
-    "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-vue": "^7.8.0",
+    "eslint-config-prettier": "^8.2.0",
+    "eslint-plugin-vue": "^7.9.0",
+    "firebase": "^8.4.1",
     "postcss-preset-env": "^6.7.0",
     "prettier": "^2.2.1",
-    "sass": "^1.32.8",
+    "sass": "^1.32.11",
     "typescript": "^4.2.4",
-    "vite": "^2.1.5"
+    "vite": "^2.2.1",
+    "vue-tsc": "0.0.25"
   }
 }

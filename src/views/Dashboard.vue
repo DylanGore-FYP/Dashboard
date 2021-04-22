@@ -17,6 +17,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { mapGetters } from 'vuex';
 
 export default defineComponent({
   name: 'Dashboard',
@@ -26,12 +27,17 @@ export default defineComponent({
       vehicles: [] as Array<string>
     };
   },
+  computed: {
+    // Get the getter functions from the Vuex store
+    ...mapGetters(['getToken'])
+  },
   mounted() {
     this.getVehicles();
+    this.testAPI();
   },
   methods: {
     getVehicles() {
-      this.axios.get('http://localhost:5000/vehicles/all').then((response) => {
+      this.axios.get('http://localhost:5000/vehicles/all', { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
         this.vehicles = response.data as Array<string>;
         console.log(response.data);
       });
