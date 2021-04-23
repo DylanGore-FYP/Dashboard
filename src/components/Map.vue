@@ -4,7 +4,7 @@
     <LControlLayers position="topright"></LControlLayers>
     <LMarker :lat-lng="[53.1424, -7.6291]">
       <LPopup>
-        <button class="btn btn-primary">hell</button>
+        <p>Hello, world!</p>
       </LPopup>
     </LMarker>
   </LMap>
@@ -79,7 +79,7 @@ export default defineComponent({
   },
   mounted() {
     // Get vehicles on load
-    this.getVehicles();
+    // this.getVehicles();
   },
   methods: {
     // Query the API for the list of vehicles
