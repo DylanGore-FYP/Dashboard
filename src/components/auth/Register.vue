@@ -1,61 +1,47 @@
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col">
-        <h1>Register</h1>
-        <!-- Show only if the user is not already logged in -->
-        <div v-if="!getUser" class="card mt-2">
-          <div class="card-body">
-            <form>
-              <!-- Error Alert -->
-              <div v-if="getAlert.message && getAlert.type === 'error'" class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ getAlert.message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="clearAlert()"></button>
-              </div>
-              <!-- Success Alert -->
-              <div v-if="getAlert.message && getAlert.type === 'success'" class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ getAlert.message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-              <!-- Main Form -->
-              <div class="form-floating mb-3">
-                <input id="name" v-model="name" type="text" autocomplete="name" class="form-control" placeholder="Name" required />
-                <label for="name" class="form-label">Name</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input id="email" v-model="email" type="email" autocomplete="username" class="form-control" placeholder="example@example.com" required />
-                <label for="email" class="form-label">E-mail address</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input id="password" v-model="password" type="password" autocomplete="new-password" class="form-control" placeholder="Password" required @input="checkPassword()" />
-                <label for="password">Password</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input id="passwordConfirm" v-model="passwordConfirm" type="password" autocomplete="new-password" class="form-control" placeholder="Password" required />
-                <label for="passwordConfirm">Confirm Password</label>
-              </div>
-              <div class="mb-3">
-                <label for="passwordStrength" class="form-label">Password Strength ({{ passwordStrength.value }})</label>
-                <div id="passwordStrength" class="progress">
-                  <div :class="progressClasses" role="progressbar" :aria-valuenow="passwordStrength.id" :style="passwordStrengthPB" :aria-valuemin="0" :aria-valuemax="4"></div>
-                </div>
-              </div>
-              <button type="submit" class="btn btn-primary" @click.prevent="createAccount()">Create Account</button>
-              &nbsp;
-              <router-link to="/login">I already have an account</router-link>
-            </form>
+    <div class="row justify-content-center pt-5">
+      <div class="col-4">
+        <h1 class="text-center h2 pb-4">Create a New Account</h1>
+        <form>
+          <!-- Error Alert -->
+          <div v-if="getAlert.message && getAlert.type === 'error'" class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ getAlert.message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="clearAlert()"></button>
           </div>
-        </div>
-        <!-- Show if user is already logged in -->
-        <div v-else class="card mt-2">
-          <div class="card-body">
-            <div class="card-text">You are logged in as {{ getUser.displayName }} ({{ getUser.email }})</div>
-            <div class="btn-group" role="group">
-              <router-link class="btn btn-primary" to="/dashboard" role="button" tag="button">Dashboard</router-link>
-              <button class="btn btn-secondary" role="button" @click="logOutUser()">Log Out</button>
+          <!-- Success Alert -->
+          <div v-if="getAlert.message && getAlert.type === 'success'" class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ getAlert.message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          <!-- Main Form -->
+          <div class="form-floating mb-3">
+            <input id="name" v-model="name" type="text" autocomplete="name" class="form-control" placeholder="Name" required />
+            <label for="name" class="form-label">Name</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input id="email" v-model="email" type="email" autocomplete="username" class="form-control" placeholder="example@example.com" required />
+            <label for="email" class="form-label">Email Address</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input id="password" v-model="password" type="password" autocomplete="new-password" class="form-control" placeholder="Password" required @input="checkPassword()" />
+            <label for="password">Password</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input id="passwordConfirm" v-model="passwordConfirm" type="password" autocomplete="new-password" class="form-control" placeholder="Password" required />
+            <label for="passwordConfirm">Confirm Password</label>
+          </div>
+          <div class="mb-3">
+            <label for="passwordStrength" class="form-label">Password Strength ({{ passwordStrength.value }})</label>
+            <div id="passwordStrength" class="progress">
+              <div :class="progressClasses" role="progressbar" :aria-valuenow="passwordStrength.id" :style="passwordStrengthPB" :aria-valuemin="0" :aria-valuemax="4"></div>
             </div>
           </div>
-        </div>
+          <div class="d-grid gap-2 text-center">
+            <button type="submit" class="btn btn-primary" @click.prevent="createAccount()">Create Account</button>
+            <router-link to="/login">I already have an account</router-link>
+          </div>
+        </form>
       </div>
     </div>
   </div>

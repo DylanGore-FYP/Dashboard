@@ -1,32 +1,28 @@
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col">
-        <h1>Profile</h1>
-        <div class="row">
-          <div class="col-sm-12 col-md-2">
-            <img id="avatar" :src="getUser.photoURL" class="img-responsive rounded-circle" alt="User avatar image" />
-          </div>
-          <div class="col-sm-12 col-md-10">
-            <h2>{{ getUser.displayName }}</h2>
-            <ul class="list-unstyled">
-              <li>User ID: {{ getUser.uid }}</li>
-              <li>E-Mail Address: {{ getUser.email }}</li>
-              <li>Phone Number: {{ getUser.phoneNumber ? getUser.phoneNumber : 'Not set' }}</li>
-            </ul>
-            <!-- {{ getUser }} -->
-            <h3 class="h5">Connected Login Providers</h3>
-            <button v-for="provider in enabledProviders" :key="provider" class="btn providerButton py-0 my-0" @click="updateProvider(provider)">
-              <span class="iconify" :data-icon="getProviderIconName(provider)" data-inline="true"></span>
-            </button>
-            <h3 class="h5">Available Login Providers</h3>
-            <button v-for="provider in availableProviders" :key="provider" class="btn providerButton py-0 my-0" @click="updateProvider(provider)">
-              <span class="iconify" :data-icon="getProviderIconName(provider)" data-inline="true"></span>
-            </button>
-          </div>
-        </div>
+    <div class="row justify-content-center">
+      <div class="col text-center">
+        <h1 class="text-center h2 pb-2">Profile</h1>
+        <img id="avatar" :src="getUser.photoURL" class="img-responsive rounded-circle" alt="User avatar image" />
 
-        <div class="card-body"></div>
+        <h2 class="h3">{{ getUser.displayName }}</h2>
+        <ul class="list-unstyled">
+          <li class="small">{{ getUser.uid }}</li>
+          <br />
+          <li>{{ getUser.email ? getUser.email : 'No email address found' }}</li>
+          <li>{{ getUser.phoneNumber ? getUser.phoneNumber : 'No phone number found' }}</li>
+        </ul>
+        <p class="small"><em>Click on a login provider to link/unlink your account.</em></p>
+        <h3 class="h5">Connected Login Providers</h3>
+        <button v-for="provider in enabledProviders" :key="provider" class="btn providerButton py-0 my-0" @click="updateProvider(provider)">
+          <span class="iconify" :data-icon="getProviderIconName(provider)" data-inline="true"></span>
+        </button>
+        <h3 class="h5">Available Login Providers</h3>
+        <button v-for="provider in availableProviders" :key="provider" class="btn providerButton py-0 my-0" @click="updateProvider(provider)">
+          <span class="iconify" :data-icon="getProviderIconName(provider)" data-inline="true"></span>
+        </button>
+        <br />
+        <router-link to="/forgot-password" class="btn btn-primary mt-5" tag="button">Reset Password</router-link>
       </div>
     </div>
   </div>
