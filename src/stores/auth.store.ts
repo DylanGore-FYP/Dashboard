@@ -56,20 +56,8 @@ export default createStore({
       // prettier-ignore
       firebase.auth().signOut().catch(err => {
         commit('setAlert', {type: 'error', message: err.message});
-        console.error(`Eror while logging user out - ${err.message}`)
+        console.error(`Error while logging user out - ${err.message}`)
       })
-    },
-    // Update the user object whenever the authentication state changes
-    authAction({ commit }) {
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          commit('setUser', user);
-          commit('setToken', firebase.auth().currentUser?.getIdToken());
-        } else {
-          commit('setUser', null);
-          commit('setToken', null);
-        }
-      });
     }
   },
   getters: {

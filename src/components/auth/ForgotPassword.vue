@@ -1,35 +1,33 @@
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col">
-        <h1>Forgot Password</h1>
-        <div class="card mt-2">
-          <div class="card-body">
-            <form>
-              <!-- Error Alert -->
-              <div v-if="getAlert.message && getAlert.type === 'error'" class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ getAlert.message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="clearAlert()"></button>
-              </div>
-              <!-- Success Alert -->
-              <div v-if="getAlert.message && getAlert.type === 'success'" class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ getAlert.message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="clearAlert()"></button>
-              </div>
-              <!-- Main Form -->
-              <div class="form-floating mb-3">
-                <input id="email" v-model="email" type="email" class="form-control" placeholder="example@example.com" />
-                <label for="email" class="form-label">E-mail address</label>
-                <div class="form-text">
-                  Please enter your e-mail address above. If it matches an existing account you will receive an e-mail with instuctions to reset your password.
-                </div>
-              </div>
-              <button type="submit" class="btn btn-primary" @click.prevent="submitForm()">Reset Password</button>
-              &nbsp;
-              <router-link to="/login">Return to login</router-link>
-            </form>
+    <div class="row justify-content-center pt-5">
+      <div class="col-4">
+        <h1 class="text-center h2 pb-4">Forgot Password</h1>
+        <form>
+          <!-- Error Alert -->
+          <div v-if="getAlert.message && getAlert.type === 'error'" class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ getAlert.message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="clearAlert()"></button>
           </div>
-        </div>
+          <!-- Success Alert -->
+          <div v-if="getAlert.message && getAlert.type === 'success'" class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ getAlert.message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="clearAlert()"></button>
+          </div>
+          <!-- Main Form -->
+          <div class="form-floating mb-3">
+            <input id="email" v-model="email" type="email" class="form-control" placeholder="example@example.com" />
+            <label for="email" class="form-label">Email Address</label>
+            <p class="form-text text-center">Please enter your email address to request a password reset link be sent to you via email.</p>
+          </div>
+          <div class="d-grid gap-2 text-center">
+            <button type="submit" class="btn btn-primary" @click.prevent="submitForm()">Send Recovery Email</button>
+            <!-- Only show the link to the login page if the user isn't already logged in -->
+            <router-link v-if="!getUser" to="/login">Return to login</router-link>
+            <!-- Show a link to the user's profile if they are logged in -->
+            <router-link v-else to="/profile">Return your profile</router-link>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -48,7 +46,7 @@ export default defineComponent({
   },
   computed: {
     // Get the getter functions from the Vuex store
-    ...mapGetters(['getAlert'])
+    ...mapGetters(['getAlert', 'getUser'])
   },
   mounted() {
     // Clear any previous alerts when the component loads

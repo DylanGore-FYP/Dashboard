@@ -1,1 +1,24 @@
+$enable-rounded: false;
+
 @import "../node_modules/bootstrap/scss/bootstrap";
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+// Set height to allow for proper vertical alignment
+html, body, #app {
+  height: 100%;
+}
+
+
+body{
+  // Replace the default font
+  font-family: 'Roboto', sans-serif;
+  // Allow for fixed navbar
+  padding-top: 3.5rem;
+}
+
+// Remove glow around close button
+.btn-close:focus{
+  border:none;
+  box-shadow: none;
+}
