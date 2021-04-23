@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
       <router-link class="navbar-brand" to="/">Vehicle Dashboard</router-link>
       <!-- prettier-ignore -->
