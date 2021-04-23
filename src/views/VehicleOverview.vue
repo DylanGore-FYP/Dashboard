@@ -1,28 +1,28 @@
 <template>
-  <div class="container-fluid">
+  <div id="graph-container" class="container-fluid">
     <div class="row">
       <div class="col-12">
         <h1>Vehicle: {{ $route.params.vehicleId }}</h1>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-6 col-sm-12">
-        <div id="chartSpeed" class="vehicleChart"></div>
+      <div class="col-md-6 col-sm-12 d-none">
+        <div id="chartSpeed" class="vehicle-chart"></div>
       </div>
-      <div class="col-md-6 col-sm-12">
-        <div id="chartRPM" class="vehicleChart"></div>
+      <div class="col-md-6 col-sm-12 d-none">
+        <div id="chartRPM" class="vehicle-chart"></div>
       </div>
-      <div class="col-md-6 col-sm-12">
-        <div id="chartCoolantTemp" class="vehicleChart"></div>
+      <div class="col-md-6 col-sm-12 d-none">
+        <div id="chartCoolantTemp" class="vehicle-chart"></div>
       </div>
-      <div class="col-md-6 col-sm-12">
-        <div id="chartIntakeTemp" class="vehicleChart"></div>
+      <div class="col-md-6 col-sm-12 d-none">
+        <div id="chartIntakeTemp" class="vehicle-chart"></div>
       </div>
-      <div class="col-md-6 col-sm-12">
-        <div id="chartThrottlePos" class="vehicleChart"></div>
+      <div class="col-md-6 col-sm-12 d-none">
+        <div id="chartThrottlePos" class="vehicle-chart"></div>
       </div>
-      <div class="col-md-6 col-sm-12">
-        <div id="chartEngineLoad" class="vehicleChart"></div>
+      <div class="col-md-6 col-sm-12 d-none">
+        <div id="chartEngineLoad" class="vehicle-chart"></div>
       </div>
     </div>
   </div>
@@ -36,6 +36,11 @@ import { mapGetters } from 'vuex';
 
 export default defineComponent({
   name: 'VehicleOverview',
+  data() {
+    return {
+      enabledMetrics: [] as Array<string>
+    };
+  },
   computed: {
     // Get the getter functions from the Vuex store
     ...mapGetters(['getToken'])
@@ -61,60 +66,74 @@ export default defineComponent({
     generateChart(name: string, title: string, unit: string, id: string) {
       // Request the data from the API using the current user's authorization token
       this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/${name}`, { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
-        // Define a list to hold the chart data
-        var result = [] as Array<{ x: number; y: number }>;
-        // For each entry in the HTTP response add it to the list in a format compatible with the chart
-        response.data.forEach((entry: any) => {
-          result.push({ x: new Date(entry.time).getTime(), y: entry.value });
-        });
+        // Only continue if the response is not empty
+        if (response.data) {
+          // Add the metric to a list of enabled metrics
+          this.enabledMetrics.push(name);
 
-        // Configure the chart
-        var options = {
-          // Set chart size and type
-          chart: {
-            type: 'line',
-            height: '400'
-          },
-          // Set the dataset
-          series: [
-            {
-              name: title,
-              data: result
-            }
-          ],
-          xaxis: {
-            // Set the default timeframe
-            type: 'datetime',
-            min: new Date('2021-01-18T13:40:00').getTime(),
-            max: new Date('2021-01-18T13:48:00').getTime()
-          },
-          yaxis: {
-            labels: {
-              // Round values in labels
-              formatter: function (value: number) {
-                return Math.round((value + Number.EPSILON) * 100) / 100 + unit;
-              }
-            }
-          },
-          tooltip: {
-            x: {
-              // Format timestamps in the specified format
-              formatter(timestamp: number) {
-                return format(new Date(timestamp), 'dd MMM y pp');
-              }
-            }
-          },
-          title: {
-            text: title
-          },
-          markers: {
-            size: 1
+          // Define a list to hold the chart data
+          var result = [] as Array<{ x: number; y: number }>;
+          // For each entry in the HTTP response add it to the list in a format compatible with the chart
+          response.data.forEach((entry: any) => {
+            result.push({ x: new Date(entry.time).getTime(), y: entry.value });
+          });
+
+          // Only display the graph if there is data to display
+          let graphContainerDiv = document.querySelector(id)?.parentElement;
+          if (result.length > 0) {
+            graphContainerDiv?.classList.remove('d-none');
+          } else {
+            graphContainerDiv?.classList.add('d-none');
           }
-        };
 
-        // Create and render the chart
-        var chart = new ApexCharts(document.querySelector(id), options);
-        chart.render();
+          // Configure the chart
+          var options = {
+            // Set chart size and type
+            chart: {
+              type: 'line',
+              height: '400'
+            },
+            // Set the dataset
+            series: [
+              {
+                name: title,
+                data: result
+              }
+            ],
+            xaxis: {
+              // Set the default timeframe
+              type: 'datetime',
+              min: new Date('2021-01-18T13:40:00').getTime(),
+              max: new Date('2021-01-18T13:48:00').getTime()
+            },
+            yaxis: {
+              labels: {
+                // Round values in labels
+                formatter: function (value: number) {
+                  return Math.round((value + Number.EPSILON) * 100) / 100 + unit;
+                }
+              }
+            },
+            tooltip: {
+              x: {
+                // Format timestamps in the specified format
+                formatter(timestamp: number) {
+                  return format(new Date(timestamp), 'dd MMM y pp');
+                }
+              }
+            },
+            title: {
+              text: title
+            },
+            markers: {
+              size: 1
+            }
+          };
+
+          // Create and render the chart
+          var chart = new ApexCharts(document.querySelector(id), options);
+          chart.render();
+        }
       });
     }
   }
@@ -122,7 +141,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.vehicleChart {
+.vehicle-chart {
   height: 120px;
 }
 </style>
