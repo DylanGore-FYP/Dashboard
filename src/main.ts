@@ -7,14 +7,26 @@ import App from './App.vue';
 import authStore from './stores/auth.store';
 import router from './routes/main.routes';
 
-import './plugins/firebase';
+import { firebase } from './plugins/firebase';
 
 import 'bootstrap';
 
-const app = createApp(App);
+// Define a variable for the app instance
+let app = null as any;
 
-app.use(authStore);
-app.use(router);
-app.use(VueAxios, axios);
+// Check authentication status before rendering the app
+firebase.auth().onAuthStateChanged((user) => {
+  if (!app) {
+    // Create the Vue app if it doesn't already exist
+    app = createApp(App);
 
-app.mount('#app');
+    app.use(authStore);
+    app.use(router);
+    app.use(VueAxios, axios);
+
+    app.mount('#app');
+  }
+
+  authStore.commit('setUser', user);
+  authStore.commit('setToken', firebase.auth().currentUser?.getIdToken());
+});
