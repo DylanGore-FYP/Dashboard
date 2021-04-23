@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   fyp-dashboard:
-    image: fyp_dashboard
+    image: ghcr.io/dylangore-fyp/dashboard:latest
     container_name: fyp-dashboard
     build:
       context: .
