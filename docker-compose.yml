@@ -12,6 +12,15 @@ services:
       - 8080:80
     security_opt:
       - no-new-privileges:true
+    environment:
+      VITE_FIREBASE_API_KEY: 'YOUR_FIREBASE_API_KEY'
+      VITE_AUTH_DOMAIN: ''
+      VITE_PROJECT_ID: ''
+      VITE_STORAGE_BUCKET: ''
+      VITE_MESSAGING_SENDER_ID: ''
+      VITE_APP_ID: ''
+      VITE_ENABLE_USER_REGISTRATION: 'false'
+      VITE_API_LOCATION: ''
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
