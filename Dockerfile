@@ -8,6 +8,9 @@ WORKDIR /build
 COPY package*.json ./
 COPY vite.config.ts ./
 
+# Include an .env file with placeholder variables to allow for run time variable replacement
+COPY .env.docker ./.env
+
 # Install the required dependencies
 RUN npm install
 
@@ -23,6 +26,10 @@ FROM nginx:stable-alpine as production
 # Copy the build output to the default Nginx directory
 COPY --from=build-stage /build/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy and run the script to replace environment variables at run time
+COPY entrypoint.sh /usr/share/nginx/
+ENTRYPOINT ["/usr/share/nginx/entrypoint.sh"]
 
 # Expose port 80
 EXPOSE 80
