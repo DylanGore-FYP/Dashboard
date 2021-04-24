@@ -13,10 +13,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapGetters } from 'vuex';
-
 // @ts-ignore
 import { LMap, LTileLayer, LMarker, LPopup, LControlLayers } from '@vue-leaflet/vue-leaflet';
 import 'leaflet/dist/leaflet.css';
+import { apiLocation } from '../helpers/environment';
 
 export default defineComponent({
   name: 'Dashboard',
@@ -84,7 +84,7 @@ export default defineComponent({
   methods: {
     // Query the API for the list of vehicles
     getVehicles() {
-      this.axios.get('http://localhost:5000/vehicles/all', { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
+      this.axios.get(`${apiLocation}/vehicles/all`, { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
         this.vehicles = response.data as Array<string>;
       });
     }

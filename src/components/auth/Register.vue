@@ -52,6 +52,7 @@ import { defineComponent } from 'vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 // @ts-ignore
 import { passwordStrength } from 'check-password-strength';
+import { enableUserRegistration } from '../../helpers/environment';
 
 export default defineComponent({
   data() {
@@ -77,6 +78,12 @@ export default defineComponent({
   mounted() {
     // Clear any previous alerts when the component loads
     this.clearAlert();
+
+    /** If the user attempts to navigate to this page when
+     * registration is disabled, go back to the previous page */
+    if (!enableUserRegistration) {
+      this.$router.go(-1);
+    }
   },
   methods: {
     // Get the action and mutation functions from the Vuex store

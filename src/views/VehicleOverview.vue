@@ -33,6 +33,7 @@ import { defineComponent } from 'vue';
 import ApexCharts from 'apexcharts';
 import { format } from 'date-fns';
 import { mapGetters } from 'vuex';
+import { apiLocation } from '../helpers/environment';
 
 export default defineComponent({
   name: 'VehicleOverview',
@@ -65,7 +66,7 @@ export default defineComponent({
      */
     generateChart(name: string, title: string, unit: string, id: string) {
       // Request the data from the API using the current user's authorization token
-      this.axios.get(`http://localhost:5000/vehicles/${this.$route.params.vehicleId}/${name}`, { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
+      this.axios.get(`${apiLocation}/vehicles/${this.$route.params.vehicleId}/${name}`, { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
         // Only continue if the response is not empty
         if (response.data) {
           // Add the metric to a list of enabled metrics

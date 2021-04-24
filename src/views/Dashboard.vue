@@ -48,6 +48,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapGetters } from 'vuex';
+import { apiLocation } from '../helpers/environment';
 
 import Map from '../components/Map.vue';
 
@@ -77,8 +78,8 @@ export default defineComponent({
   methods: {
     // Query the API for the list of vehicles
     getVehicles() {
-      this.axios.get('http://localhost:5000/vehicles/all', { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
-        this.vehicles = response.data as Array<string>;
+      this.axios.get(`${apiLocation}/vehicles/all`, { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
+        if (String(response.headers['content-type']).includes('application/json')) this.vehicles = response.data as Array<string>;
       });
     }
   }

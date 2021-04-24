@@ -21,7 +21,7 @@
           </div>
           <div class="d-grid gap-2 text-center">
             <button type="submit" class="btn btn-primary" @click.prevent="login">Login</button>
-            <router-link to="/register">Create a new account</router-link>
+            <router-link v-if="enableUserRegistration" to="/register">Create a new account</router-link>
           </div>
         </form>
       </div>
@@ -32,12 +32,14 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { enableUserRegistration } from '../../helpers/environment';
 
 export default defineComponent({
   data() {
     return {
       email: '' as string,
-      password: '' as string
+      password: '' as string,
+      enableUserRegistration: enableUserRegistration as boolean
     };
   },
   computed: {
