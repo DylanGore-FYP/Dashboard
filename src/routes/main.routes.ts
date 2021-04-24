@@ -17,7 +17,9 @@ const routes = [
   // @ts-ignore
   { name: 'forgotPassword', path: '/forgot-password', component: () => import('../components/auth/ForgotPassword.vue') },
   // @ts-ignore
-  { name: 'profile', path: '/profile', meta: { requiresAuth: true }, component: () => import('../components/auth/Profile.vue') }
+  { name: 'profile', path: '/profile', meta: { requiresAuth: true }, component: () => import('../components/auth/Profile.vue') },
+  // @ts-ignore
+  { name: 'admin', path: '/admin', meta: { requiresAdmin: true }, component: () => import('../components/auth/Admin.vue') }
 ];
 
 const router = createRouter({ history, routes });
@@ -49,6 +51,23 @@ router.beforeEach((to, _from, next) => {
     } else {
       // User is not logged in, continue
       next();
+    }
+  } else {
+    // The route doesn't have any relevant meta tags, continue
+    next();
+  }
+});
+
+router.beforeEach((to, _from, next) => {
+  // If the route requires admin
+  if (to.matched.some((rec) => rec.meta.requiresAdmin)) {
+    // Check the user's authentication state
+    if (store.getters.getUser && store.getters.getRole === 'admin') {
+      // If user is logged in as an administrator, continue
+      next();
+    } else {
+      // User is not an admin, redirect
+      next({ name: 'dashboard' });
     }
   } else {
     // The route doesn't have any relevant meta tags, continue
