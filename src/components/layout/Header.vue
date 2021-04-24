@@ -17,6 +17,9 @@
           </li>
         </ul>
         <ul class="navbar-nav mb-2 mb-lg-0">
+          <li v-if="getRole === 'admin'" class="nav-item">
+            <router-link class="nav-link" to="/admin">Admin</router-link>
+          </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/profile">{{ getUser.displayName }}</router-link>
           </li>
@@ -53,7 +56,7 @@ export default defineComponent({
   name: 'Header',
   computed: {
     // Get the getter functions from the Vuex store
-    ...mapGetters(['getUser', 'isUserAuthenticated'])
+    ...mapGetters(['getUser', 'isUserAuthenticated', 'getRole'])
   },
   methods: {
     // Get the action functions from the Vuex store

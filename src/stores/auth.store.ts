@@ -4,7 +4,7 @@ import gravatar from 'gravatar';
 
 // Define the default state for each item in the store
 const initialState = () => {
-  return { user: null, token: null, alert: { type: 'error', message: '' } };
+  return { user: null, token: null, role: null, alert: { type: 'error', message: '' } };
 };
 
 export default createStore({
@@ -15,6 +15,9 @@ export default createStore({
     },
     setToken(state, payload) {
       state.token = payload;
+    },
+    setRole(state, payload) {
+      state.role = payload;
     },
     setAlert(state, payload) {
       state.alert = payload;
@@ -69,6 +72,11 @@ export default createStore({
     getToken(state) {
       // @ts-ignore
       return state.token?.i;
+    },
+    // Get the user's role
+    getRole(state) {
+      // @ts-ignore
+      return state.role;
     },
     // Check if the user object exists, it will only exist if the user is authenticated.
     isUserAuthenticated(state) {

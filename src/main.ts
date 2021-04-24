@@ -29,4 +29,8 @@ firebase.auth().onAuthStateChanged((user) => {
 
   authStore.commit('setUser', user);
   authStore.commit('setToken', firebase.auth().currentUser?.getIdToken());
+  // prettier-ignore
+  firebase.auth().currentUser?.getIdTokenResult().then(idTokenResult => {
+    authStore.commit('setRole', idTokenResult.claims.role);
+  })
 });
