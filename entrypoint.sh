@@ -10,5 +10,6 @@ sed -i -e "s|VITE_MESSAGING_SENDER_ID|$VITE_MESSAGING_SENDER_ID|g" /usr/share/ng
 sed -i -e "s|VITE_APP_ID|$VITE_APP_ID|g" /usr/share/nginx/html/assets/*.js
 sed -i -e "s|VITE_ENABLE_USER_REGISTRATION|$VITE_ENABLE_USER_REGISTRATION|g" /usr/share/nginx/html/assets/*.js
 sed -i -e "s|VITE_API_LOCATION|$VITE_API_LOCATION|g" /usr/share/nginx/html/assets/*.js
+sed -i -e "s|VITE_LOGIN_PROVIDERS|$VITE_LOGIN_PROVIDERS|g" /usr/share/nginx/html/assets/*.js
 
 exec "$@"

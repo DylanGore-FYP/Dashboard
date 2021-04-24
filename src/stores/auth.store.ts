@@ -27,7 +27,7 @@ export default createStore({
     }
   },
   actions: {
-    // Create a new user using an email address and password.
+    /** Create a new user using an email address and password */
     registerUserAction({ commit }, payload) {
       // prettier-ignore
       firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password).then(res => {
@@ -46,7 +46,7 @@ export default createStore({
         console.error(`Error while creating user account for ${payload.email}: ${err.message}`);
       })
     },
-    // Authenticate a user using an email address and password.
+    /** Authenticate a user using an email address and password */
     async authenticateUserAction({ commit }, payload) {
       // prettier-ignore
       return firebase.auth().signInWithEmailAndPassword(payload.email, payload.password).catch(err => {
@@ -54,13 +54,65 @@ export default createStore({
         console.error(`Error while authenticating user ${payload.email} - ${err.message}`);
       })
     },
-    // Log the user out
+    /** Log the user out */
     logOutUser({ commit }) {
       // prettier-ignore
       firebase.auth().signOut().catch(err => {
         commit('setAlert', {type: 'error', message: err.message});
         console.error(`Error while logging user out - ${err.message}`)
       })
+    },
+    /** Login using external providers and set the user state */
+    externalLogin({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        let authProvider = null;
+
+        // Map the provider name to a Firebase Authentication Provider
+        switch (payload.provider) {
+          case 'google':
+            authProvider = new firebase.auth.GoogleAuthProvider();
+            break;
+          case 'facebook':
+            authProvider = new firebase.auth.FacebookAuthProvider();
+            break;
+          case 'twitter':
+            authProvider = new firebase.auth.TwitterAuthProvider();
+            break;
+          case 'github':
+            authProvider = new firebase.auth.GithubAuthProvider();
+            break;
+          case 'yahoo':
+            authProvider = new firebase.auth.OAuthProvider('yahoo.com');
+            break;
+          case 'microsoft':
+            authProvider = new firebase.auth.OAuthProvider('microsoft.com');
+            break;
+          case 'apple':
+            authProvider = new firebase.auth.OAuthProvider('apple.com');
+            break;
+          default:
+            reject(`Authentication provider ${payload.provider} not supported`);
+            break;
+        }
+
+        // If the auth provider is one of the providers defined above, continue
+        if (authProvider != null) {
+          // prettier-ignore
+          firebase.auth().signInWithPopup(authProvider).then(res => {
+            resolve(res.user)
+            commit('setUser', res.user)
+          }).catch(err => {
+            commit('setAlert', {type: 'error', message: `Unable to login - ${err.message}`})
+            reject(err)
+          })
+        } else {
+          reject(`Authentication provider ${payload.provider} not supported`);
+        }
+      });
+    },
+    /** TODO: Link multiple auth providers together */
+    linkAccount({ commit }, payload) {
+      console.log('linkAccount');
     }
   },
   getters: {
