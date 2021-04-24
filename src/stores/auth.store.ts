@@ -44,7 +44,7 @@ export default createStore({
       })
     },
     // Authenticate a user using an email address and password.
-    authenticateUserAction({ commit }, payload) {
+    async authenticateUserAction({ commit }, payload) {
       // prettier-ignore
       return firebase.auth().signInWithEmailAndPassword(payload.email, payload.password).catch(err => {
         commit('setAlert', {type: 'error', message: err.message});

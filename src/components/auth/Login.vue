@@ -53,8 +53,12 @@ export default defineComponent({
     ...mapMutations(['clearAlert']),
     ...mapActions(['authenticateUserAction', 'logOutUser']),
     // Log the user in
-    login() {
-      this.authenticateUserAction({ email: this.email, password: this.password });
+    async login() {
+      await this.authenticateUserAction({ email: this.email, password: this.password, router: this.$router });
+      // If the user is authenticated, redirect to dashboard
+      if (this.getUser) {
+        this.$router.push({ path: '/dashboard' });
+      }
 
       // clear the login form
       this.email = '';
