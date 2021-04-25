@@ -22,6 +22,7 @@ RUN npm run build
 
 ## production stage ##
 FROM nginx:stable-alpine as production
+LABEL maintainer="Dylan Gore <hello@dylangore.ie>"
 
 # Copy the build output to the default Nginx directory
 COPY --from=build-stage /build/dist /usr/share/nginx/html
