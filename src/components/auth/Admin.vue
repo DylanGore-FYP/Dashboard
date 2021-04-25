@@ -106,7 +106,7 @@ export default defineComponent({
         console.log('You cannot promote/demote yourself!');
       } else {
         let mode = this.isAdmin(user) ? 'revoke' : 'grant';
-        this.axios.post(`${apiLocation}/auth/roles/${mode}/admin/${user.uid}`, {}, { headers: { authorization: `Bearer ${this.getToken}` } }).then(() => {
+        this.axios.put(`${apiLocation}/auth/roles/${mode}/admin/${user.uid}`, {}, { headers: { authorization: `Bearer ${this.getToken}` } }).then(() => {
           this.getUsers();
         });
       }
