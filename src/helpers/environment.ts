@@ -11,4 +11,11 @@ if (import.meta.env.VITE_API_LOCATION != undefined) {
   apiLocation = String(import.meta.env.VITE_API_LOCATION);
 }
 
-export { enableUserRegistration, apiLocation };
+/** The names of the login providers to be enabled in a comma-seperated string (e.g. 'google,github,microsoft') */
+let enabledLoginProviders = [] as Array<string>;
+if (import.meta.env.VITE_LOGIN_PROVIDERS != undefined && String(import.meta.env.VITE_LOGIN_PROVIDERS).length > 0) {
+  // prettier-ignore
+  enabledLoginProviders = String(import.meta.env.VITE_LOGIN_PROVIDERS).split(',')
+}
+
+export { enableUserRegistration, apiLocation, enabledLoginProviders };

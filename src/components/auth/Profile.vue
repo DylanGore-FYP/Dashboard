@@ -3,6 +3,16 @@
     <div class="row justify-content-center">
       <div class="col text-center">
         <h1 class="text-center h2 pb-2">Profile</h1>
+        <!-- Error Alert -->
+        <div v-if="getAlert.message && getAlert.type === 'error'" class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ getAlert.message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="clearAlert()"></button>
+        </div>
+        <!-- Success Alert -->
+        <div v-if="getAlert.message && getAlert.type === 'success'" class="alert alert-success alert-dismissible fade show" role="alert">
+          {{ getAlert.message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <img id="avatar" :src="getUser.photoURL" class="img-responsive rounded-circle" alt="User avatar image" />
 
         <h2 class="h3">{{ getUser.displayName }}</h2>
@@ -14,15 +24,20 @@
         </ul>
         <p class="small"><em>Click on a login provider to link/unlink your account.</em></p>
         <h3 class="h5">Connected Login Providers</h3>
-        <button v-for="provider in enabledProviders" :key="provider" class="btn providerButton py-0 my-0" @click="updateProvider(provider)">
+        <!-- TODO: Implement click action -->
+        <button v-for="provider in connectedProviders" :key="provider" class="btn providerButton py-0 my-0" @click="updateProvider(provider)">
+          <!-- <button v-for="provider in connectedProviders" :key="provider" class="btn providerButton py-0 my-0"> -->
           <span class="iconify" :data-icon="getProviderIconName(provider)" data-inline="true"></span>
         </button>
-        <h3 class="h5">Available Login Providers</h3>
-        <button v-for="provider in availableProviders" :key="provider" class="btn providerButton py-0 my-0" @click="updateProvider(provider)">
-          <span class="iconify" :data-icon="getProviderIconName(provider)" data-inline="true"></span>
-        </button>
-        <br />
-        <router-link to="/forgot-password" class="btn btn-primary mt-5" tag="button">Reset Password</router-link>
+        <!-- Only show if there is additional providers available -->
+        <!-- TODO: Implement account linking -->
+        <div v-if="availableProviders.length > 0">
+          <h3 class="h5">Available Login Providers</h3>
+          <button v-for="provider in availableProviders" :key="provider" class="btn providerButton py-0 my-0" @click="updateProvider(provider)">
+            <span class="iconify" :data-icon="getProviderIconName(provider)" data-inline="true"></span>
+          </button>
+        </div>
+        <router-link v-if="connectedProviders.includes('password')" to="/forgot-password" class="btn btn-primary mt-2 mb-2" tag="button">Reset Password</router-link>
       </div>
     </div>
   </div>
@@ -30,14 +45,15 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { enabledLoginProviders } from '../../helpers/environment';
 
 export default defineComponent({
   data() {
     return {
-      enabledProviders: [] as Array<string>,
+      connectedProviders: [] as Array<string>,
       availableProviders: [] as Array<string>,
-      possibleProviders: ['password', 'phone', 'google', 'facebook', 'twitter', 'github', 'yahoo', 'microsoft', 'apple']
+      possibleProviders: ['password', ...enabledLoginProviders]
     };
   },
   computed: {
@@ -51,17 +67,22 @@ export default defineComponent({
   },
   methods: {
     // Get the action and mutation functions from the Vuex store
-    ...mapMutations(['clearAlert']),
+    ...mapMutations(['clearAlert', 'setAlert']),
+    ...mapActions(['linkAccount', 'unlinkAccount']),
+    /** Populate relevant provider lists */
     getProviders() {
       this.getUser.providerData.forEach((provider: any) => {
-        this.enabledProviders.push(provider.providerId);
+        this.possibleProviders.forEach((possible: string) => {
+          if (String(provider.providerId).includes(possible)) {
+            this.connectedProviders.push(possible);
+          }
+        });
       });
-      this.possibleProviders.forEach((possible) => {
-        if (!this.enabledProviders.includes(possible)) {
-          this.availableProviders.push(possible);
-        }
-      });
+
+      // Show the remaining providers that the user can link, do not allow the user to link an email/password provider as it is currently unsupported
+      this.availableProviders = this.possibleProviders.filter((x) => !this.connectedProviders.includes(x) && x !== 'password');
     },
+    /** Return the icon name for the given provider */
     getProviderIconName(provider: string) {
       switch (provider) {
         case 'password':
@@ -70,8 +91,30 @@ export default defineComponent({
           return `mdi:${provider}`;
       }
     },
+    /** Link/unlink an authentication provider */
     updateProvider(provider: string) {
-      console.log(`Linking/Unlinking ${provider} as a login provider`);
+      // Do not allow the user to link/unlink the 'password' provider
+      if (provider !== 'password') {
+        if (this.connectedProviders.includes(provider)) {
+          // prettier-ignore
+          this.unlinkAccount({ provider: provider }).then(() => {
+            // Refresh the page to update the provider list
+            this.$router.go(0);
+          }).catch((err) => {
+            this.setAlert({type: 'error', message: `Error while unlinking account - ${err.message}`})
+          });
+        } else {
+          // prettier-ignore
+          this.linkAccount({ provider: provider }).then(() => {
+            // Refresh the page to update the provider list
+            this.$router.go(0);
+          }).catch((err) => {
+            this.setAlert({type: 'error', message: `Error while linking account - ${err.message}`})
+          });
+        }
+      } else {
+        this.setAlert({ type: 'error', message: `You cannot link/unlink the email provider!` });
+      }
     }
   }
 });
@@ -83,5 +126,11 @@ export default defineComponent({
 }
 .providerButton {
   font-size: 2.5em;
+}
+
+/* Remove glow around provider button */
+.providerButton:focus {
+  border: none;
+  box-shadow: none;
 }
 </style>

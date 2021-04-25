@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row justify-content-center pt-5">
-      <div class="col-4">
+      <div class="col-sm-12 col-md-8 col-lg-4">
         <h1 class="text-center h2 pb-4">Login</h1>
         <form>
           <!-- Error Alert -->
@@ -24,6 +24,12 @@
             <router-link v-if="enableUserRegistration" to="/register">Create a new account</router-link>
           </div>
         </form>
+        <div v-if="enabledProviders.length > 0" class="text-center">
+          <p class="lead mt-5">Or, login using one of the providers below.</p>
+          <button v-for="provider in enabledProviders" :key="provider" class="btn m-1 p-2" @click="externalLoginAndRedirect(provider)">
+            <span class="iconify" :data-icon="`mdi:${provider}`" data-inline="true"></span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -32,14 +38,15 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import { enableUserRegistration } from '../../helpers/environment';
+import { enabledLoginProviders, enableUserRegistration } from '../../helpers/environment';
 
 export default defineComponent({
   data() {
     return {
       email: '' as string,
       password: '' as string,
-      enableUserRegistration: enableUserRegistration as boolean
+      enableUserRegistration: enableUserRegistration as boolean,
+      enabledProviders: enabledLoginProviders as Array<string>
     };
   },
   computed: {
@@ -53,8 +60,8 @@ export default defineComponent({
   methods: {
     // Get the action and mutation functions from the Vuex store
     ...mapMutations(['clearAlert']),
-    ...mapActions(['authenticateUserAction', 'logOutUser']),
-    // Log the user in
+    ...mapActions(['authenticateUserAction', 'logOutUser', 'externalLogin']),
+    /** Log the user in */
     async login() {
       await this.authenticateUserAction({ email: this.email, password: this.password, router: this.$router });
       // If the user is authenticated, redirect to dashboard
@@ -65,7 +72,21 @@ export default defineComponent({
       // clear the login form
       this.email = '';
       this.password = '';
+    },
+    /** Login using an external provider, redirect the user on successful login */
+    externalLoginAndRedirect(provider: string) {
+      this.externalLogin({ provider: provider }).then(() => {
+        if (this.getUser) {
+          this.$router.push({ path: '/dashboard' });
+        }
+      });
     }
   }
 });
 </script>
+
+<style scoped>
+.iconify {
+  font-size: 1.8em;
+}
+</style>
