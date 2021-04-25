@@ -37,9 +37,7 @@
             <span class="iconify" :data-icon="getProviderIconName(provider)" data-inline="true"></span>
           </button>
         </div>
-
-        <br />
-        <router-link v-if="connectedProviders.includes('password')" to="/forgot-password" class="btn btn-primary mt-5" tag="button">Reset Password</router-link>
+        <router-link v-if="connectedProviders.includes('password')" to="/forgot-password" class="btn btn-primary mt-2 mb-2" tag="button">Reset Password</router-link>
       </div>
     </div>
   </div>
