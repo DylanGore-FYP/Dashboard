@@ -27,10 +27,11 @@
               <li>User Since: {{ user.metadata.creationTime }}</li>
             </ul>
             <div class="d-grid gap-2">
-              <button class="btn btn-danger btn-block" :disabled="user.uid === getUser.uid" @click="deleteUser(user)">Delete User</button>
-              <button class="btn btn-warning btn-block" :disabled="user.uid === getUser.uid" @click="promoteDemoteAdmin(user)">
+              <button class="btn btn-danger" :disabled="user.uid === getUser.uid" @click="deleteUser(user)">Delete User</button>
+              <button class="btn btn-warning" :disabled="user.uid === getUser.uid" @click="promoteDemoteAdmin(user)">
                 {{ isAdmin(user) ? 'Revoke' : 'Grant' }} Admin Privileges
               </button>
+              <button class="btn btn-success" :disabled="user.uid === getUser.uid" @click="setUserStatus(user)">{{ checkUserStatus(user) }}</button>
             </div>
           </div>
         </div>
@@ -81,6 +82,16 @@ export default defineComponent({
       }
       return false;
     },
+    /** Check if the user is disable/enabled/approved */
+    checkUserStatus(user: any) {
+      if (user.disabled) {
+        return 'Enable User';
+      } else if (!user.customClaims || !user.customClaims.role) {
+        return 'Approve User';
+      } else {
+        return 'Disable User';
+      }
+    },
     /** Send an API request to delete a user */
     deleteUser(user: any) {
       console.log(`Deleting user: ${user.uid}`);
@@ -97,6 +108,29 @@ export default defineComponent({
         let mode = this.isAdmin(user) ? 'revoke' : 'grant';
         this.axios.post(`${apiLocation}/auth/roles/${mode}/admin/${user.uid}`, {}, { headers: { authorization: `Bearer ${this.getToken}` } }).then(() => {
           this.getUsers();
+        });
+      }
+    },
+    /** Send an API request to set the user status to enabled/disabled/approved */
+    setUserStatus(user: any) {
+      let route = '';
+      console.log(user);
+      if (user.customClaims && user.customClaims.role && !user.disabled) {
+        // Disable
+        route = `${apiLocation}/auth/users/${user.uid}/disable`;
+      } else if (user.disabled) {
+        // Enable
+        route = `${apiLocation}/auth/users/${user.uid}/enable`;
+      } else {
+        // Approve
+        route = `${apiLocation}/auth/roles/grant/user/${user.uid}`;
+      }
+      if (route.length > 0) {
+        // prettier-ignore
+        this.axios.put(route, {}, { headers: { authorization: `Bearer ${this.getToken}` } }).then(() => {
+          this.getUsers();
+        }).catch(err => {
+          console.error(err)
         });
       }
     }
