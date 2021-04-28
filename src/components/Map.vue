@@ -100,10 +100,9 @@ export default defineComponent({
   mounted() {
     // Get vehicles on load
     this.getVehicles();
-    console.log(this.$refs.map);
   },
   methods: {
-    // Query the API for the list of vehicles
+    /** Query the API for the list of vehicles */
     getVehicles() {
       // prettier-ignore
       this.axios.get(`${apiLocation}/vehicles/all`, { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
@@ -115,31 +114,26 @@ export default defineComponent({
       });
     },
 
-    // Get Current Vehicle Locations
+    /** Get current vehicle ;ocations */
     getLocations(vehicleId: string) {
       console.log('Getting tracking for ' + vehicleId);
       this.axios.get(`${apiLocation}/vehicles/${vehicleId}/tracking`, { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
-        // @ts-ignore
-        console.log(response);
         this.vehicleLocs.push({ vehicle: vehicleId, data: response.data });
       });
     },
-
-    getLocationsList(list) {
+    /** Return the location history of a vehicle in a list that Leaflet can use */
+    getLocationsList(list: Array<any>) {
       console.log(list);
       let result: any[] = [];
-      // @ts-ignore
       list.forEach((entry) => {
-        // @ts-ignore
         if (entry.lat != 0.0 && entry.lon != 0.0) {
           result.push([entry.lat, entry.lon]);
         }
       });
       return result;
     },
-
+    /** Move the map to a specified location and zoom level */
     zoomTo(lat: number = 53.1424, lon: number = -7.6921, zoom: number = 7) {
-      // @ts-ignore
       this.mapConfig.center = [lat, lon];
       this.mapConfig.zoom = zoom;
     }

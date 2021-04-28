@@ -62,8 +62,7 @@ export default defineComponent({
   data() {
     return {
       vehicles: [] as Array<string>,
-      vehicleDetails: {},
-      // manufacturerIcon: 'mdi:car' as string,
+      vehicleDetails: {} as any,
       map: {
         zoom: 7 as number
       }
@@ -87,14 +86,11 @@ export default defineComponent({
         this.vehicles.forEach(vehicle => {
           this.axios.get(`${apiLocation}/vehicles/${vehicle}`, { headers: { authorization: `Bearer ${this.getToken}` } }).then(res => {
             if (String(res.headers['content-type']).includes('application/json')){
-              // @ts-ignore
               this.vehicleDetails[vehicle] = res.data
 
               if (res.data.manufacturer){
-                // @ts-ignore
                 this.vehicleDetails[vehicle].icon = 'simple-icons:' + String(res.data.manufacturer).toLowerCase();
               }else{
-                // @ts-ignore
                 this.vehicleDetails[vehicle].icon = 'mdi:car';
               }
             }
@@ -103,9 +99,7 @@ export default defineComponent({
       });
     },
     getVehicleIcon(vehicle: string) {
-      // @ts-ignore
       if (this.vehicleDetails[vehicle] && this.vehicleDetails[vehicle].manufacturer) {
-        // @ts-ignore
         return 'simple-icons:' + String(this.vehicleDetails[vehicle].manufacturer).toLowerCase();
       } else {
         return 'mdi:car';
