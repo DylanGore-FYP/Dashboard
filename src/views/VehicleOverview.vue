@@ -104,8 +104,8 @@ export default defineComponent({
             xaxis: {
               // Set the default timeframe
               type: 'datetime',
-              min: new Date('2021-01-18T13:40:00').getTime(),
-              max: new Date('2021-01-18T13:48:00').getTime()
+              // min: new Date('2021-01-18T13:40:00').getTime(),
+              max: new Date().getTime()
             },
             yaxis: {
               labels: {
