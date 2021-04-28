@@ -2,19 +2,37 @@
   <LMap ref="map" :min-zoom="7" :zoom="mapConfig.zoom" :center="mapConfig.center" :max-bounds="mapConfig.bounds" style="height: 75vh">
     <LTileLayer v-for="layer in baseLayers" :key="layer.name" :name="layer.name" :visible="layer.visible" :url="layer.url" :attribution="layer.attribution" layer-type="base" />
     <LControlLayers position="topright"></LControlLayers>
-    <LMarker :lat-lng="[53.1424, -7.6291]">
+    <LMarker v-for="loc in vehicleLocs" :key="loc.vehicle" :lat-lng="[loc.data[0].lat, loc.data[0].lon]">
       <LPopup>
-        <p>Hello, world!</p>
+        <p>{{ String(loc.vehicle).toUpperCase() }}</p>
       </LPopup>
     </LMarker>
+    <LPolyline v-for="vehicle in vehicleLocs" :key="vehicle.vehicle" :lat-lngs="getLocationsList(vehicle.data)" color="blue"></LPolyline>
   </LMap>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <div class="btn-toolbar mt-2" role="toolbar">
+          <div class="btn-group" role="group" aria-label="Vehicle Locations">
+            <button v-for="vehicle in vehicleLocs" :key="vehicle.vehicle" type="button" class="btn btn-primary" @click="zoomTo(vehicle.data[0].lat, vehicle.data[0].lon, 13)">
+              {{ String(vehicle.vehicle).toUpperCase() }}
+            </button>
+          </div>
+          <div class="btn-group" role="gorup" aria-label="Map Controlls">
+            <button class="btn btn-secondary" @click="zoomTo()">Reset Map</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapGetters } from 'vuex';
 // @ts-ignore
-import { LMap, LTileLayer, LMarker, LPopup, LControlLayers } from '@vue-leaflet/vue-leaflet';
+import { LMap, LTileLayer, LMarker, LPopup, LControlLayers, LPolyline } from '@vue-leaflet/vue-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { apiLocation } from '../helpers/environment';
 
@@ -25,11 +43,13 @@ export default defineComponent({
     LTileLayer,
     LMarker,
     LPopup,
-    LControlLayers
+    LControlLayers,
+    LPolyline
   },
   data() {
     return {
       vehicles: [] as Array<string>,
+      vehicleLocs: [] as Array<any>,
       mapConfig: {
         url: '//{s}.tile.osm.org/{z}/{x}/{y}.png',
         zoom: 7,
@@ -79,14 +99,43 @@ export default defineComponent({
   },
   mounted() {
     // Get vehicles on load
-    // this.getVehicles();
+    this.getVehicles();
   },
   methods: {
-    // Query the API for the list of vehicles
+    /** Query the API for the list of vehicles */
     getVehicles() {
+      // prettier-ignore
       this.axios.get(`${apiLocation}/vehicles/all`, { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
         this.vehicles = response.data as Array<string>;
+      }).then(() => {
+        this.vehicles.forEach(vehicle => {
+          this.getLocations(vehicle)
+        })
       });
+    },
+
+    /** Get current vehicle ;ocations */
+    getLocations(vehicleId: string) {
+      console.log('Getting tracking for ' + vehicleId);
+      this.axios.get(`${apiLocation}/vehicles/${vehicleId}/tracking`, { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
+        this.vehicleLocs.push({ vehicle: vehicleId, data: response.data });
+      });
+    },
+    /** Return the location history of a vehicle in a list that Leaflet can use */
+    getLocationsList(list: Array<any>) {
+      console.log(list);
+      let result: any[] = [];
+      list.forEach((entry) => {
+        if (entry.lat != 0.0 && entry.lon != 0.0) {
+          result.push([entry.lat, entry.lon]);
+        }
+      });
+      return result;
+    },
+    /** Move the map to a specified location and zoom level */
+    zoomTo(lat: number = 53.1424, lon: number = -7.6921, zoom: number = 7) {
+      this.mapConfig.center = [lat, lon];
+      this.mapConfig.zoom = zoom;
     }
   }
 });

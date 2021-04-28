@@ -11,16 +11,18 @@
       <div v-for="vehicle in vehicles" :key="vehicle" class="col-sm-12 col-md-3">
         <div class="card">
           <div class="d-flex justify-content-center pt-4">
-            <span class="iconify manufacturerIcon" :data-icon="manufacturerIcon" data-inline="true"></span>
+            <span class="iconify manufacturerIcon" :data-icon="vehicleDetails[vehicle].icon ? vehicleDetails[vehicle].icon : 'mdi:car'" data-inline="true"></span>
           </div>
           <div class="card-body">
             <hr />
             <h3 class="h5 card-title text-center">{{ vehicle.toUpperCase() }}</h3>
             <ul class="list-unstyled">
-              <li>Last Updated: Unknown</li>
-              <li>Last Driver: Unknown</li>
-              <li>Fault Status: OK</li>
-              <li>Current State: Offline</li>
+              <li>Last Updated: {{ vehicleDetails[vehicle] && vehicleDetails[vehicle].time ? vehicleDetails[vehicle].time : 'Unknown' }}</li>
+              <li>Make: {{ vehicleDetails[vehicle] && vehicleDetails[vehicle].manufacturer ? vehicleDetails[vehicle].manufacturer : 'Unknown' }}</li>
+              <li>Model: {{ vehicleDetails[vehicle] && vehicleDetails[vehicle].model ? vehicleDetails[vehicle].model : 'Unknown' }}</li>
+              <li>Name: {{ vehicleDetails[vehicle] && vehicleDetails[vehicle].friendly_name ? vehicleDetails[vehicle].friendly_name : 'Unknown' }}</li>
+              <!-- <li>Fault Status: OK</li>
+              <li>Current State: Offline</li> -->
             </ul>
             <div class="d-grid">
               <router-link :to="{ name: 'vehicleOverview', params: { vehicleId: vehicle } }" class="btn btn-primary btn-block">View Details</router-link>
@@ -36,7 +38,7 @@
       </div>
       <div class="col-sm-12 col-md-6">
         <h2>Alerts</h2>
-        No alerts.
+        <p class="lead">No Alerts.</p>
       </div>
     </div>
     <div v-else class="row mt-2">
@@ -60,8 +62,7 @@ export default defineComponent({
   data() {
     return {
       vehicles: [] as Array<string>,
-      manufacturerIcon: 'simple-icons:tesla' as string,
-      // manufacturerIcon: 'mdi:car' as string,
+      vehicleDetails: {} as any,
       map: {
         zoom: 7 as number
       }
@@ -77,10 +78,32 @@ export default defineComponent({
   },
   methods: {
     // Query the API for the list of vehicles
+    // prettier-ignore
     getVehicles() {
       this.axios.get(`${apiLocation}/vehicles/all`, { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
         if (String(response.headers['content-type']).includes('application/json')) this.vehicles = response.data as Array<string>;
+      }).then(() => {
+        this.vehicles.forEach(vehicle => {
+          this.axios.get(`${apiLocation}/vehicles/${vehicle}`, { headers: { authorization: `Bearer ${this.getToken}` } }).then(res => {
+            if (String(res.headers['content-type']).includes('application/json')){
+              this.vehicleDetails[vehicle] = res.data
+
+              if (res.data.manufacturer){
+                this.vehicleDetails[vehicle].icon = 'simple-icons:' + String(res.data.manufacturer).toLowerCase();
+              }else{
+                this.vehicleDetails[vehicle].icon = 'mdi:car';
+              }
+            }
+          })
+        })
       });
+    },
+    getVehicleIcon(vehicle: string) {
+      if (this.vehicleDetails[vehicle] && this.vehicleDetails[vehicle].manufacturer) {
+        return 'simple-icons:' + String(this.vehicleDetails[vehicle].manufacturer).toLowerCase();
+      } else {
+        return 'mdi:car';
+      }
     }
   }
 });
