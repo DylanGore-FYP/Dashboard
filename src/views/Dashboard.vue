@@ -11,14 +11,16 @@
       <div v-for="vehicle in vehicles" :key="vehicle" class="col-sm-12 col-md-3">
         <div class="card">
           <div class="d-flex justify-content-center pt-4">
-            <span class="iconify manufacturerIcon" :data-icon="manufacturerIcon" data-inline="true"></span>
+            <span class="iconify manufacturerIcon" :data-icon="vehicleDetails[vehicle].icon ? vehicleDetails[vehicle].icon : 'mdi:car'" data-inline="true"></span>
           </div>
           <div class="card-body">
             <hr />
             <h3 class="h5 card-title text-center">{{ vehicle.toUpperCase() }}</h3>
             <ul class="list-unstyled">
-              <li>Last Updated: Unknown</li>
-              <li>Last Driver: Unknown</li>
+              <li>Last Updated: {{ vehicleDetails[vehicle] && vehicleDetails[vehicle]._time ? vehicleDetails[vehicle]._time : 'Unknown' }}</li>
+              <li>Make: {{ vehicleDetails[vehicle] && vehicleDetails[vehicle].vehicle_manufacturer ? vehicleDetails[vehicle].vehicle_manufacturer : 'Unknown' }}</li>
+              <li>Model: {{ vehicleDetails[vehicle] && vehicleDetails[vehicle].vehicle_model ? vehicleDetails[vehicle].vehicle_model : 'Unknown' }}</li>
+              <li>Name: {{ vehicleDetails[vehicle] && vehicleDetails[vehicle].vehicle_name ? vehicleDetails[vehicle].vehicle_name : 'Unknown' }}</li>
               <li>Fault Status: OK</li>
               <li>Current State: Offline</li>
             </ul>
@@ -36,7 +38,7 @@
       </div>
       <div class="col-sm-12 col-md-6">
         <h2>Alerts</h2>
-        No alerts.
+        {{ vehicleDetails }}
       </div>
     </div>
     <div v-else class="row mt-2">
@@ -60,7 +62,7 @@ export default defineComponent({
   data() {
     return {
       vehicles: [] as Array<string>,
-      manufacturerIcon: 'simple-icons:tesla' as string,
+      vehicleDetails: {},
       // manufacturerIcon: 'mdi:car' as string,
       map: {
         zoom: 7 as number
@@ -77,10 +79,37 @@ export default defineComponent({
   },
   methods: {
     // Query the API for the list of vehicles
+    // prettier-ignore
     getVehicles() {
       this.axios.get(`${apiLocation}/vehicles/all`, { headers: { authorization: `Bearer ${this.getToken}` } }).then((response) => {
         if (String(response.headers['content-type']).includes('application/json')) this.vehicles = response.data as Array<string>;
+      }).then(() => {
+        this.vehicles.forEach(vehicle => {
+          this.axios.get(`${apiLocation}/vehicles/${vehicle}`, { headers: { authorization: `Bearer ${this.getToken}` } }).then(res => {
+            if (String(res.headers['content-type']).includes('application/json')){
+              // @ts-ignore
+              this.vehicleDetails[vehicle] = res.data
+
+              if (res.data.vehicle_manufacturer){
+                // @ts-ignore
+                this.vehicleDetails[vehicle].icon = 'simple-icons:' + String(res.data.vehicle_manufacturer).toLowerCase();
+              }else{
+                // @ts-ignore
+                this.vehicleDetails[vehicle].icon = 'mdi:car';
+              }
+            }
+          })
+        })
       });
+    },
+    getVehicleIcon(vehicle: string) {
+      // @ts-ignore
+      if (this.vehicleDetails[vehicle] && this.vehicleDetails[vehicle].vehicle_manufacturer) {
+        // @ts-ignore
+        return 'simple-icons:' + String(this.vehicleDetails[vehicle].vehicle_manufacturer).toLowerCase();
+      } else {
+        return 'mdi:car';
+      }
     }
   }
 });
