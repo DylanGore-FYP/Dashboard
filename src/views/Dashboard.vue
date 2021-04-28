@@ -17,12 +17,12 @@
             <hr />
             <h3 class="h5 card-title text-center">{{ vehicle.toUpperCase() }}</h3>
             <ul class="list-unstyled">
-              <li>Last Updated: {{ vehicleDetails[vehicle] && vehicleDetails[vehicle]._time ? vehicleDetails[vehicle]._time : 'Unknown' }}</li>
-              <li>Make: {{ vehicleDetails[vehicle] && vehicleDetails[vehicle].vehicle_manufacturer ? vehicleDetails[vehicle].vehicle_manufacturer : 'Unknown' }}</li>
-              <li>Model: {{ vehicleDetails[vehicle] && vehicleDetails[vehicle].vehicle_model ? vehicleDetails[vehicle].vehicle_model : 'Unknown' }}</li>
-              <li>Name: {{ vehicleDetails[vehicle] && vehicleDetails[vehicle].vehicle_name ? vehicleDetails[vehicle].vehicle_name : 'Unknown' }}</li>
-              <li>Fault Status: OK</li>
-              <li>Current State: Offline</li>
+              <li>Last Updated: {{ vehicleDetails[vehicle] && vehicleDetails[vehicle].time ? vehicleDetails[vehicle].time : 'Unknown' }}</li>
+              <li>Make: {{ vehicleDetails[vehicle] && vehicleDetails[vehicle].manufacturer ? vehicleDetails[vehicle].manufacturer : 'Unknown' }}</li>
+              <li>Model: {{ vehicleDetails[vehicle] && vehicleDetails[vehicle].model ? vehicleDetails[vehicle].model : 'Unknown' }}</li>
+              <li>Name: {{ vehicleDetails[vehicle] && vehicleDetails[vehicle].friendly_name ? vehicleDetails[vehicle].friendly_name : 'Unknown' }}</li>
+              <!-- <li>Fault Status: OK</li>
+              <li>Current State: Offline</li> -->
             </ul>
             <div class="d-grid">
               <router-link :to="{ name: 'vehicleOverview', params: { vehicleId: vehicle } }" class="btn btn-primary btn-block">View Details</router-link>
@@ -38,7 +38,7 @@
       </div>
       <div class="col-sm-12 col-md-6">
         <h2>Alerts</h2>
-        {{ vehicleDetails }}
+        <p class="lead">No Alerts.</p>
       </div>
     </div>
     <div v-else class="row mt-2">
@@ -90,9 +90,9 @@ export default defineComponent({
               // @ts-ignore
               this.vehicleDetails[vehicle] = res.data
 
-              if (res.data.vehicle_manufacturer){
+              if (res.data.manufacturer){
                 // @ts-ignore
-                this.vehicleDetails[vehicle].icon = 'simple-icons:' + String(res.data.vehicle_manufacturer).toLowerCase();
+                this.vehicleDetails[vehicle].icon = 'simple-icons:' + String(res.data.manufacturer).toLowerCase();
               }else{
                 // @ts-ignore
                 this.vehicleDetails[vehicle].icon = 'mdi:car';
@@ -104,9 +104,9 @@ export default defineComponent({
     },
     getVehicleIcon(vehicle: string) {
       // @ts-ignore
-      if (this.vehicleDetails[vehicle] && this.vehicleDetails[vehicle].vehicle_manufacturer) {
+      if (this.vehicleDetails[vehicle] && this.vehicleDetails[vehicle].manufacturer) {
         // @ts-ignore
-        return 'simple-icons:' + String(this.vehicleDetails[vehicle].vehicle_manufacturer).toLowerCase();
+        return 'simple-icons:' + String(this.vehicleDetails[vehicle].manufacturer).toLowerCase();
       } else {
         return 'mdi:car';
       }
