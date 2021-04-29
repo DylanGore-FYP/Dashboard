@@ -1,5 +1,5 @@
 ## build stage ##
-FROM node:15-alpine as build-stage
+FROM node:14-alpine as build-stage
 
 # Define a working directory
 WORKDIR /build
@@ -30,6 +30,8 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy and run the script to replace environment variables at run time
 COPY entrypoint.sh /usr/share/nginx/
+RUN chmod +x /usr/share/nginx/entrypoint.sh
+
 ENTRYPOINT ["/usr/share/nginx/entrypoint.sh"]
 
 # Expose port 80
