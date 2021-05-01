@@ -18,7 +18,7 @@
     "apexcharts": "^3.26.1",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.0-beta1",
-    "check-password-strength": "^2.0.2",
+    "check-password-strength": "^2.0.3",
     "date-fns": "^2.21.1",
     "gravatar": "^1.8.1",
     "leaflet": "^1.7.1",
@@ -31,7 +31,7 @@
     "@types/gravatar": "^1.8.1",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
-    "@vitejs/plugin-vue": "^1.2.1",
+    "@vitejs/plugin-vue": "^1.2.2",
     "@vue-leaflet/vue-leaflet": "^0.6.0",
     "@vue/compiler-sfc": "^3.0.11",
     "@vue/eslint-config-typescript": "^7.0.0",
@@ -39,12 +39,12 @@
     "eslint": "^7.25.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-vue": "^7.9.0",
-    "firebase": "^8.4.2",
+    "firebase": "^8.4.3",
     "postcss-preset-env": "^6.7.0",
     "prettier": "^2.2.1",
-    "sass": "^1.32.11",
+    "sass": "^1.32.12",
     "typescript": "^4.2.4",
-    "vite": "^2.2.2",
+    "vite": "^2.2.3",
     "vue-tsc": "0.0.25"
   }
 }
