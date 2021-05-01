@@ -91,7 +91,7 @@ export default defineComponent({
     ...mapMutations(['clearAlert', 'setAlert']),
     // Runs whenever the password value changes
     checkPassword() {
-      // Calculate the password strength
+      // @ts-ignore Calculate the password strength
       this.passwordStrength = passwordStrength(this.password);
       // Set the progress bar width based on the password strength
       this.passwordStrengthPB = `width: ${this.passwordStrength.id * 25 + 25}%;`;
