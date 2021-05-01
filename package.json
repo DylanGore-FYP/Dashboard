@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "vite",
     "lint": "eslint src --ext .ts,.vue",
+    "check-ts": "vue-tsc --noEmit",
     "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview"
   },
