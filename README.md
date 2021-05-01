@@ -8,9 +8,10 @@
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
 
-## Contributors ✨
+[![GitHub Workflow Status - Lint](https://img.shields.io/github/workflow/status/DylanGore-FYP/Dashboard/Lint%20Code?label=Lint&logo=github&style=for-the-badge)](https://github.com/DylanGore-FYP/Dashboard/actions/workflows/lint-code.yml)
+[![GitHub Workflow Status - Build](https://img.shields.io/github/workflow/status/DylanGore-FYP/Dashboard/build?label=Docker%20Build&logo=github&style=for-the-badge)](https://github.com/DylanGore-FYP/Dashboard/actions/workflows/build-docker.yml)
 
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
