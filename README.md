@@ -11,7 +11,7 @@
 [![GitHub Workflow Status - Lint](https://img.shields.io/github/workflow/status/DylanGore-FYP/Dashboard/Lint%20Code?label=Lint&logo=github&style=for-the-badge)](https://github.com/DylanGore-FYP/Dashboard/actions/workflows/lint-code.yml)
 [![GitHub Workflow Status - Build](https://img.shields.io/github/workflow/status/DylanGore-FYP/Dashboard/build?label=Docker%20Build&logo=github&style=for-the-badge)](https://github.com/DylanGore-FYP/Dashboard/actions/workflows/build-docker.yml)
 
-A Vue.js web app designed to interract with the vehicles API to display data. Firebase is used for authentication.
+A Vue.js web app designed to interact with the vehicles API to display data. Firebase is used for authentication.
 
 ## Contributors
 
